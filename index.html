@@ -1,10 +1,10 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
   <title>Spin the Wheel Game</title>
-  <link href="https://fonts.googleapis.com/css?family=Montserrat:400,700&display=swap" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css?family=Montserrat:400,700&display=swap" rel="stylesheet" />
   <style>
     /* Reset and global styles */
     * {
@@ -28,6 +28,7 @@
       color: #007BFF;
       text-decoration: none;
       margin: 0 10px;
+      cursor: pointer;
     }
     a:hover {
       text-decoration: underline;
@@ -36,31 +37,31 @@
       background: #fff;
       padding: 20px;
       text-align: center;
-      box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+      box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
       width: 100%;
+    }
+    header h1 {
+      font-size: 2.5em;
+      color: #007BFF;
+      margin-bottom: 10px;
     }
     header nav a {
       font-size: 1.1em;
+      margin: 0 15px;
     }
-    h1 {
-      font-size: 2.5em;
-      color: #007BFF;
-      margin-bottom: 20px;
-    }
-    h2, h3 {
-      color: #007BFF;
-      margin: 20px 0 10px;
-    }
-    /* Full-width section styles */
     section {
       width: 100%;
       padding: 20px;
       margin: 20px 0;
       background: #fff;
       border-radius: 4px;
-      box-shadow: 0 2px 6px rgba(0,0,0,0.1);
+      box-shadow: 0 2px 6px rgba(0, 0, 0, 0.1);
     }
-    /* Flex container for game area spanning full width */
+    /* Hide sections by default except the game */
+    #terms, #privacy {
+      display: none;
+    }
+    /* Flex container for game area */
     #gameContainer {
       display: flex;
       flex-wrap: wrap;
@@ -73,6 +74,7 @@
     #textInputContainer {
       flex: 1 1 300px;
       max-width: 400px;
+      padding: 10px;
     }
     #textInputContainer textarea {
       width: 100%;
@@ -93,9 +95,10 @@
       position: relative;
       flex: 1 1 300px;
       max-width: 500px;
+      padding: 10px;
     }
     #wheelCanvas {
-      box-shadow: 0 4px 10px rgba(0,0,0,0.15);
+      box-shadow: 0 4px 10px rgba(0, 0, 0, 0.15);
       border-radius: 50%;
       display: block;
       margin: 0 auto;
@@ -137,19 +140,18 @@
   </style>
 </head>
 <body>
-
-  <!-- Header with Navigation -->
+  <!-- Header with Title Above Navigation -->
   <header>
+    <h1>Spin the Wheel Game</h1>
     <nav>
-      <a href="#gameSection">Home</a>
-      <a href="#terms">Terms &amp; Conditions</a>
-      <a href="#privacy">Privacy Policy</a>
+      <a id="navGame" href="#gameSection">Home</a>
+      <a id="navTerms" href="#terms">Terms &amp; Conditions</a>
+      <a id="navPrivacy" href="#privacy">Privacy Policy</a>
     </nav>
   </header>
 
-  <!-- Main Game Section -->
+  <!-- Main Game Section (Visible by default) -->
   <section id="gameSection">
-    <h1>Spin the Wheel Game</h1>
     <div id="gameContainer">
       <!-- Text input container -->
       <div id="textInputContainer">
@@ -159,14 +161,14 @@
       <!-- Wheel container -->
       <div id="wheelContainer">
         <div id="pointer"></div>
-        <canvas id="wheelCanvas" width="500" height="500"></canvas>
+        <canvas id="wheelCanvas"></canvas>
       </div>
     </div>
     <button class="btn" id="spinButton">Spin!</button>
     <h2 id="result"></h2>
   </section>
 
-  <!-- Terms & Conditions Section -->
+  <!-- Terms & Conditions Section (Collapsed by default) -->
   <section id="terms">
     <h2>Terms &amp; Conditions</h2>
     <p>
@@ -180,7 +182,7 @@
     </p>
   </section>
 
-  <!-- Privacy Policy Section -->
+  <!-- Privacy Policy Section (Collapsed by default) -->
   <section id="privacy">
     <h2>Privacy Policy</h2>
     <p>
@@ -211,14 +213,22 @@
 
     // Generate vibrant colors based on the number of segments
     var colors = generateColors(segments.length);
-    // Keep track of the last segment count so we only regenerate colors if the count changes
-    var lastSegmentCount = segments.length;
+    var lastSegmentCount = segments.length; // to ensure colors only update if count changes
 
     var startAngle = 0;
     var arc = Math.PI * 2 / segments.length;
     var spinTime = 0;
     var spinTimeTotal = 0;
     var spinAngleTotal = 0;
+
+    // Responsive canvas size
+    function updateCanvasSize() {
+      // Set canvas size as 90% of window width or max 500, whichever is smaller
+      var newSize = Math.min(window.innerWidth * 0.9, 500);
+      canvas.width = newSize;
+      canvas.height = newSize;
+      drawWheel();
+    }
 
     // Generate colors using HSL
     function generateColors(n) {
@@ -250,42 +260,42 @@
       return lines;
     }
 
-    // Draw the wheel with wrapped text for each segment
+    // Draw the wheel with wrapped text for each segment using dynamic sizing
     function drawWheel() {
-      var outsideRadius = 200;
-      var textRadius = 160;
-      // Smaller central white circle (insideRadius = 30)
-      var insideRadius = 30;
+      var canvasSize = canvas.width;
+      var centerX = canvasSize / 2;
+      var centerY = canvasSize / 2;
+      var outsideRadius = centerX - 20; // 20px padding
+      var textRadius = outsideRadius - 40;
+      var insideRadius = canvasSize * 0.06; // proportionate inner circle (e.g. 30 when canvas=500)
       ctx.clearRect(0, 0, canvas.width, canvas.height);
       ctx.lineWidth = 2;
       ctx.strokeStyle = "white";
       ctx.font = "bold 16px 'Montserrat', sans-serif";
 
-      // Update arc based on current segments count
+      // Update arc if segments have changed
       arc = Math.PI * 2 / segments.length;
 
       for (var i = 0; i < segments.length; i++) {
         var angle = startAngle + i * arc;
         ctx.fillStyle = colors[i];
         ctx.beginPath();
-        ctx.arc(250, 250, outsideRadius, angle, angle + arc, false);
-        ctx.arc(250, 250, insideRadius, angle + arc, angle, true);
+        ctx.arc(centerX, centerY, outsideRadius, angle, angle + arc, false);
+        ctx.arc(centerX, centerY, insideRadius, angle + arc, angle, true);
         ctx.fill();
         ctx.stroke();
 
         // Draw the segment text with wrapping if needed
         ctx.save();
         ctx.fillStyle = "#fff";
-        // Move to the middle of the segment
-        ctx.translate(250 + Math.cos(angle + arc/2) * textRadius, 250 + Math.sin(angle + arc/2) * textRadius);
+        ctx.translate(centerX + Math.cos(angle + arc/2) * textRadius,
+                      centerY + Math.sin(angle + arc/2) * textRadius);
         ctx.rotate(angle + arc/2 + Math.PI/2);
 
         var text = segments[i];
-        // Set max width based on arc length at the text radius (slightly smaller than full arc length)
         var maxWidth = arc * textRadius * 0.9;
         var lines = wrapText(ctx, text, maxWidth);
         var lineHeight = 18;
-        // Center multiple lines vertically
         var offset = -((lines.length - 1) / 2) * lineHeight;
         for (var j = 0; j < lines.length; j++) {
           var line = lines[j];
@@ -310,8 +320,7 @@
 
     // When spin stops, calculate which segment is selected
     function stopRotateWheel() {
-      // For a pointer above the wheel, add 90 degrees
-      var degrees = startAngle * 180 / Math.PI + 90;
+      var degrees = startAngle * 180 / Math.PI + 90; // adjust for pointer position
       var arcd = arc * 180 / Math.PI;
       var index = Math.floor((360 - degrees % 360) / arcd);
       resultDiv.innerHTML = "Result: " + segments[index];
@@ -328,8 +337,7 @@
     // Spin button event listener
     document.getElementById("spinButton").addEventListener("click", function() {
       spinTime = 0;
-      // Set spin duration between 6 and 9 seconds
-      spinTimeTotal = Math.random() * 3000 + 6000;
+      spinTimeTotal = Math.random() * 3000 + 6000; // 6-9 seconds
       spinAngleTotal = Math.random() * 1000 + 1500;
       rotateWheel();
     });
@@ -346,7 +354,6 @@
       } else {
         segments = defaultSegments.slice();
       }
-      // Regenerate colors only if the number of segments has changed
       if (segments.length !== lastSegmentCount) {
         colors = generateColors(segments.length);
         lastSegmentCount = segments.length;
@@ -355,8 +362,36 @@
       drawWheel();
     });
 
-    // Draw the initial wheel
-    drawWheel();
+    // Navigation: Show selected section and hide others
+    function showSection(id) {
+      document.getElementById("gameSection").style.display = "none";
+      document.getElementById("terms").style.display = "none";
+      document.getElementById("privacy").style.display = "none";
+      document.getElementById(id).style.display = "block";
+      if(id === "gameSection"){
+        updateCanvasSize();
+      }
+    }
+
+    document.getElementById("navGame").addEventListener("click", function(e) {
+      e.preventDefault();
+      showSection("gameSection");
+    });
+    document.getElementById("navTerms").addEventListener("click", function(e) {
+      e.preventDefault();
+      showSection("terms");
+    });
+    document.getElementById("navPrivacy").addEventListener("click", function(e) {
+      e.preventDefault();
+      showSection("privacy");
+    });
+
+    // Initialize: Set up canvas size and show game section
+    updateCanvasSize();
+    showSection("gameSection");
+
+    // Update canvas size on window resize for responsiveness
+    window.addEventListener("resize", updateCanvasSize);
   </script>
 </body>
 </html>
