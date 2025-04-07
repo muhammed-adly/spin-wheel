@@ -7,15 +7,8 @@
   <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;700&display=swap" rel="stylesheet" />
   <style>
     /* Reset and global styles */
-    * {
-      box-sizing: border-box;
-      margin: 0;
-      padding: 0;
-    }
-    html, body {
-      height: 100%;
-      width: 100%;
-    }
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+    html, body { height: 100%; width: 100%; }
     body {
       font-family: 'Poppins', sans-serif;
       background: #fafafa;
@@ -24,156 +17,88 @@
       text-align: center;
       padding: 20px;
     }
-    a {
-      color: #8e44ad;
-      text-decoration: none;
-      margin: 0 10px;
-      cursor: pointer;
-    }
-    a:hover {
-      text-decoration: underline;
-    }
+    a { color: #8e44ad; text-decoration: none; margin: 0 10px; cursor: pointer; }
+    a:hover { text-decoration: underline; }
     header, footer {
-      background: #fff;
-      padding: 20px;
-      text-align: center;
-      box-shadow: 0 2px 4px rgba(0,0,0,0.1);
-      width: 100%;
+      background: #fff; padding: 20px; text-align: center;
+      box-shadow: 0 2px 4px rgba(0,0,0,0.1); width: 100%;
     }
-    header h1 {
-      font-size: 2.8em;
-      color: #8e44ad;
-      margin-bottom: 10px;
-    }
-    header nav a {
-      font-size: 1.1em;
-      margin: 0 15px;
-    }
+    header h1 { font-size: 2.8em; color: #8e44ad; margin-bottom: 10px; }
+    header nav a { font-size: 1.1em; margin: 0 15px; }
     section {
-      width: 100%;
-      padding: 20px;
-      margin: 20px 0;
-      background: #fff;
-      border-radius: 4px;
+      width: 100%; padding: 20px; margin: 20px 0;
+      background: #fff; border-radius: 4px;
       box-shadow: 0 2px 6px rgba(0,0,0,0.1);
     }
     /* Hide sections by default except the game */
-    #terms, #privacy {
-      display: none;
-    }
-    /* Flex container for game area (wheel on top, text below on small screens) */
+    #terms, #privacy { display: none; }
+    /* Flex container for game area */
     #gameContainer {
-      display: flex;
-      flex-direction: column;
-      align-items: center;
-      width: 100%;
-      padding: 20px;
-      gap: 20px;
+      display: flex; flex-direction: column;
+      align-items: center; width: 100%; padding: 20px; gap: 20px;
     }
     /* On larger screens, switch to row layout */
     @media (min-width: 768px) {
-      #gameContainer {
-        flex-direction: row;
-        justify-content: space-evenly;
-      }
+      #gameContainer { flex-direction: row; justify-content: space-evenly; }
     }
     /* Wheel container styles */
     #wheelContainer {
-      position: relative;
-      max-width: 500px;
-      width: 100%;
+      position: relative; max-width: 500px; width: 100%;
     }
     #wheelCanvas {
       box-shadow: 0 4px 10px rgba(0,0,0,0.15);
-      border-radius: 50%;
-      display: block;
-      margin: 0 auto;
+      border-radius: 50%; display: block; margin: 0 auto;
     }
     /* Pointer styling: placed above the circle, pointing down */
     #pointer {
-      width: 0;
-      height: 0;
+      width: 0; height: 0;
       border-left: 20px solid transparent;
       border-right: 20px solid transparent;
       border-top: 30px solid #333;
-      position: absolute;
-      top: -30px;
-      left: 50%;
+      position: absolute; top: -30px; left: 50%;
       transform: translateX(-50%);
       z-index: 10;
     }
     /* Text input container */
-    #textInputContainer {
-      max-width: 400px;
-      width: 100%;
-    }
+    #textInputContainer { max-width: 400px; width: 100%; }
     /* Textarea styles */
     #textInputContainer textarea {
-      width: 100%;
-      padding: 10px;
-      font-size: 16px;
-      border: 1px solid #ccc;
-      border-radius: 4px;
-      resize: vertical;
-      outline: none;
+      width: 100%; padding: 10px; font-size: 16px;
+      border: 1px solid #ccc; border-radius: 4px; resize: vertical; outline: none;
       transition: border-color 0.3s;
     }
-    #textInputContainer textarea:focus {
-      border-color: #8e44ad;
-    }
-    /* Smaller textarea on narrow screens */
+    #textInputContainer textarea:focus { border-color: #8e44ad; }
     @media (max-width: 767px) {
-      #textInputContainer textarea {
-        height: 200px;
-      }
+      #textInputContainer textarea { height: 200px; }
     }
     @media (min-width: 768px) {
-      #textInputContainer textarea {
-        height: 300px;
-      }
+      #textInputContainer textarea { height: 300px; }
     }
     /* Button styling */
     .btn {
-      font-size: 16px;
-      padding: 10px 20px;
-      cursor: pointer;
+      font-size: 16px; padding: 10px 20px; cursor: pointer;
       background: linear-gradient(45deg, #8e44ad, #3498db);
-      border: none;
-      border-radius: 25px;
-      color: #fff;
+      border: none; border-radius: 25px; color: #fff;
       transition: background 0.3s, transform 0.2s;
-      margin: 20px auto;
-      display: block;
+      margin: 20px auto; display: block;
     }
     .btn:hover {
       background: linear-gradient(45deg, #732d91, #2980b9);
       transform: scale(1.05);
     }
-    footer {
-      font-size: 0.9em;
-      width: 100%;
-    }
+    footer { font-size: 0.9em; width: 100%; }
     /* Popup modal styles */
     .popup {
-      display: none;
-      position: fixed;
-      top: 0;
-      left: 0;
-      width: 100%;
-      height: 100%;
+      display: none; position: fixed; top: 0; left: 0;
+      width: 100%; height: 100%;
       background: rgba(0,0,0,0.5);
-      justify-content: center;
-      align-items: center;
+      justify-content: center; align-items: center;
       z-index: 1000;
     }
     .popup-content {
-      background: #fff;
-      padding: 30px;
-      border-radius: 8px;
+      background: #fff; padding: 30px; border-radius: 8px;
       box-shadow: 0 2px 10px rgba(0,0,0,0.3);
-      text-align: center;
-      max-width: 90%;
-      margin: auto;
+      text-align: center; max-width: 90%; margin: auto;
     }
   </style>
 </head>
@@ -313,7 +238,7 @@ Prize 8</textarea>
       return lines;
     }
 
-    // Draw the wheel with horizontal text that rotates with the wheel
+    // Draw the wheel with labels drawn with a fixed orientation relative to the circle
     function drawWheel() {
       var canvasSize = canvas.width;
       var centerX = canvasSize / 2;
@@ -329,30 +254,37 @@ Prize 8</textarea>
       arc = Math.PI * 2 / segments.length;
       
       for (var i = 0; i < segments.length; i++) {
-        var angle = startAngle + i * arc;
+        var segStart = startAngle + i * arc;
+        var currentMidAngle = segStart + arc/2;
+        // Draw the segment shape
         ctx.fillStyle = colors[i];
         ctx.beginPath();
-        ctx.arc(centerX, centerY, outsideRadius, angle, angle + arc, false);
-        ctx.arc(centerX, centerY, insideRadius, angle + arc, angle, true);
+        ctx.arc(centerX, centerY, outsideRadius, segStart, segStart + arc, false);
+        ctx.arc(centerX, centerY, insideRadius, segStart + arc, segStart, true);
         ctx.fill();
         ctx.stroke();
         
-        // Draw text without counter-rotation so it moves with the wheel.
-        // Compute the center position of the segment:
-        var posX = centerX + Math.cos(angle + arc / 2) * textRadius;
-        var posY = centerY + Math.sin(angle + arc / 2) * textRadius;
+        // Compute the current position for the label (this moves with the wheel)
+        var posX = centerX + Math.cos(currentMidAngle) * textRadius;
+        var posY = centerY + Math.sin(currentMidAngle) * textRadius;
+        
+        // Compute a fixed label orientation independent of startAngle.
+        // For segment i, the fixed mid-angle is: fixedMid = i*arc + arc/2.
+        // To have the text point toward the center, its baseline should be rotated by (fixedMid - π/2).
+        var fixedMidAngle = i * arc + arc/2;
+        var textRotation = fixedMidAngle - Math.PI/2;
+        
         ctx.save();
         ctx.fillStyle = "#fff";
-        // Translate to the segment's center position
         ctx.translate(posX, posY);
-        // DO NOT cancel the wheel's rotation – text will rotate with the segment.
+        ctx.rotate(textRotation);
         var text = segments[i];
         var maxWidth = arc * textRadius * 0.9;
         var lines = wrapText(ctx, text, maxWidth);
         var lineHeight = 18;
         var offset = -((lines.length - 1) / 2) * lineHeight;
         for (var j = 0; j < lines.length; j++) {
-          ctx.fillText(lines[j], -ctx.measureText(lines[j]).width / 2, offset + j * lineHeight);
+          ctx.fillText(lines[j], -ctx.measureText(lines[j]).width/2, offset + j * lineHeight);
         }
         ctx.restore();
       }
@@ -380,7 +312,7 @@ Prize 8</textarea>
 
     // Stop the spin, show the result in a popup, and do not resume idle rotation
     function stopRotateWheel() {
-      var degrees = startAngle * 180 / Math.PI + 90; // adjust for pointer position
+      var degrees = startAngle * 180 / Math.PI + 90; // adjust for pointer position if any
       var arcd = arc * 180 / Math.PI;
       var index = Math.floor((360 - degrees % 360) / arcd);
       showPopup(segments[index]);
@@ -405,7 +337,7 @@ Prize 8</textarea>
       idleAnimationId = requestAnimationFrame(idleRotate);
     }
 
-    // Spin button event: cancel idle rotation, mark that a spin has occurred, and spin the wheel once
+    // Spin button event: cancel idle rotation, mark spin as done, and spin the wheel once
     document.getElementById("spinButton").addEventListener("click", function() {
       if (!hasSpun) { hasSpun = true; }
       cancelAnimationFrame(idleAnimationId);
@@ -419,11 +351,7 @@ Prize 8</textarea>
     namesInput.addEventListener("input", function() {
       var input = this.value;
       if (input.trim() !== "") {
-        segments = input.split("\n").map(function(line) {
-          return line.trim();
-        }).filter(function(line) {
-          return line !== "";
-        });
+        segments = input.split("\n").map(function(line) { return line.trim(); }).filter(function(line) { return line !== ""; });
       } else {
         segments = defaultSegments.slice();
       }
@@ -443,9 +371,7 @@ Prize 8</textarea>
       document.getElementById(id).style.display = "block";
       if (id === "gameSection") {
         updateCanvasSize();
-        if (!hasSpun) {
-          idleAnimationId = requestAnimationFrame(idleRotate);
-        }
+        if (!hasSpun) { idleAnimationId = requestAnimationFrame(idleRotate); }
       } else {
         cancelAnimationFrame(idleAnimationId);
       }
