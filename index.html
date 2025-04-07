@@ -1,141 +1,269 @@
 <!DOCTYPE html>
-<html>
+<html lang="en">
 <head>
   <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
   <title>Spin the Wheel Game</title>
   <link href="https://fonts.googleapis.com/css?family=Montserrat:400,700&display=swap" rel="stylesheet">
   <style>
+    /* Reset and global styles */
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+    }
+    html, body {
+      height: 100%;
+      width: 100%;
+    }
     body {
-      text-align: center;
       font-family: 'Montserrat', sans-serif;
       background: #f0f0f5;
       color: #333;
-      margin: 0;
+      line-height: 1.6;
+      text-align: center;
       padding: 20px;
     }
+    a {
+      color: #007BFF;
+      text-decoration: none;
+      margin: 0 10px;
+    }
+    a:hover {
+      text-decoration: underline;
+    }
+    header, footer {
+      background: #fff;
+      padding: 20px;
+      text-align: center;
+      box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+      width: 100%;
+    }
+    header nav a {
+      font-size: 1.1em;
+    }
     h1 {
-      margin-top: 20px;
       font-size: 2.5em;
       color: #007BFF;
+      margin-bottom: 20px;
     }
-    h2 {
+    h2, h3 {
       color: #007BFF;
+      margin: 20px 0 10px;
     }
-    /* Container for the wheel and pointer */
+    /* Full-width section styles */
+    section {
+      width: 100%;
+      padding: 20px;
+      margin: 20px 0;
+      background: #fff;
+      border-radius: 4px;
+      box-shadow: 0 2px 6px rgba(0,0,0,0.1);
+    }
+    /* Flex container for game area spanning full width */
+    #gameContainer {
+      display: flex;
+      flex-wrap: wrap;
+      justify-content: space-evenly;
+      align-items: flex-start;
+      width: 100%;
+      padding: 20px;
+    }
+    /* Text area styles */
+    #textInputContainer {
+      flex: 1 1 300px;
+      max-width: 400px;
+    }
+    #textInputContainer textarea {
+      width: 100%;
+      height: 300px;
+      padding: 10px;
+      font-size: 16px;
+      border: 1px solid #ccc;
+      border-radius: 4px;
+      resize: vertical;
+      outline: none;
+      transition: border-color 0.3s;
+    }
+    #textInputContainer textarea:focus {
+      border-color: #007BFF;
+    }
+    /* Wheel container styles */
     #wheelContainer {
       position: relative;
-      display: inline-block;
-      margin-top: 40px;
+      flex: 1 1 300px;
+      max-width: 500px;
     }
     #wheelCanvas {
-      /* Remove square border; add a subtle shadow and round it */
-      border: none;
       box-shadow: 0 4px 10px rgba(0,0,0,0.15);
       border-radius: 50%;
+      display: block;
+      margin: 0 auto;
     }
-    /* Pointer placed above the wheel and pointing down */
+    /* Pointer styling: placed above the circle, pointing down */
     #pointer {
       width: 0;
       height: 0;
       border-left: 20px solid transparent;
       border-right: 20px solid transparent;
-      border-top: 30px solid #333; /* Triangle pointing down */
+      border-top: 30px solid #333;
       position: absolute;
-      top: -30px; /* Placed above the canvas */
+      top: -30px;
       left: 50%;
       transform: translateX(-50%);
       z-index: 10;
     }
-    #controls {
-      margin-top: 20px;
-    }
-    input[type="text"] {
-      width: 400px;
-      font-size: 16px;
-      padding: 8px;
-      border: 1px solid #ccc;
-      border-radius: 4px;
-      outline: none;
-      margin-top: 10px;
-      transition: border-color 0.3s;
-    }
-    input[type="text"]:focus {
-      border-color: #007BFF;
-    }
-    button {
+    /* Button styling */
+    .btn {
       font-size: 16px;
       padding: 10px 20px;
-      margin: 10px;
       cursor: pointer;
       background: linear-gradient(45deg, #007BFF, #00C6FF);
       border: none;
       border-radius: 25px;
       color: #fff;
       transition: background 0.3s, transform 0.2s;
+      margin: 20px auto;
+      display: block;
     }
-    button:hover {
+    .btn:hover {
       background: linear-gradient(45deg, #0056b3, #0098cc);
       transform: scale(1.05);
+    }
+    footer {
+      font-size: 0.9em;
+      width: 100%;
     }
   </style>
 </head>
 <body>
-  <h1>Spin the Wheel Game</h1>
-  
-  <!-- Control for updating wheel segments in real time -->
-  <div id="controls">
-    <label for="namesInput">Enter comma separated names:</label><br>
-    <input type="text" id="namesInput" placeholder="Name1, Name2, Name3, ...">
-  </div>
-  
-  <div id="wheelContainer">
-    <div id="pointer"></div>
-    <canvas id="wheelCanvas" width="500" height="500"></canvas>
-  </div>
-  
-  <br>
-  <button id="spinButton">Spin!</button>
-  <h2 id="result"></h2>
-  
+
+  <!-- Header with Navigation -->
+  <header>
+    <nav>
+      <a href="#gameSection">Home</a>
+      <a href="#terms">Terms &amp; Conditions</a>
+      <a href="#privacy">Privacy Policy</a>
+    </nav>
+  </header>
+
+  <!-- Main Game Section -->
+  <section id="gameSection">
+    <h1>Spin the Wheel Game</h1>
+    <div id="gameContainer">
+      <!-- Text input container -->
+      <div id="textInputContainer">
+        <h3>Enter one item per line:</h3>
+        <textarea id="namesInput" placeholder="Item 1&#10;Item 2&#10;Item 3"></textarea>
+      </div>
+      <!-- Wheel container -->
+      <div id="wheelContainer">
+        <div id="pointer"></div>
+        <canvas id="wheelCanvas" width="500" height="500"></canvas>
+      </div>
+    </div>
+    <button class="btn" id="spinButton">Spin!</button>
+    <h2 id="result"></h2>
+  </section>
+
+  <!-- Terms & Conditions Section -->
+  <section id="terms">
+    <h2>Terms &amp; Conditions</h2>
+    <p>
+      These terms and conditions outline the rules and regulations for the use of our Spin the Wheel Game website.
+      By accessing this website, you accept these terms and conditions in full. If you disagree with these terms
+      and conditions, please do not use our website.
+    </p>
+    <p>
+      The content of this website is for your general information and use only. We reserve the right to make changes
+      at any time without notice.
+    </p>
+  </section>
+
+  <!-- Privacy Policy Section -->
+  <section id="privacy">
+    <h2>Privacy Policy</h2>
+    <p>
+      We are committed to protecting your privacy. This privacy policy explains how we collect, use, disclose, and safeguard
+      your information when you visit our website.
+    </p>
+    <p>
+      By using our website, you consent to our privacy policy. We do not share your personal information with third parties
+      without your consent except as required by law.
+    </p>
+  </section>
+
+  <!-- Footer -->
+  <footer>
+    &copy; 2025 Spin the Wheel Game. All rights reserved.
+  </footer>
+
   <script>
+    // Get DOM elements
     var canvas = document.getElementById("wheelCanvas");
     var ctx = canvas.getContext("2d");
+    var namesInput = document.getElementById("namesInput");
+    var resultDiv = document.getElementById("result");
 
-    // Default segments if no names are provided
+    // Default segments if textarea is empty
     var defaultSegments = ["Prize 1", "Prize 2", "Prize 3", "Prize 4", "Prize 5", "Prize 6", "Prize 7", "Prize 8"];
     var segments = defaultSegments.slice();
-    
+
     // Generate vibrant colors based on the number of segments
     var colors = generateColors(segments.length);
-    
+    // Keep track of the last segment count so we only regenerate colors if the count changes
+    var lastSegmentCount = segments.length;
+
     var startAngle = 0;
-    var arc = Math.PI * 2 / segments.length; 
+    var arc = Math.PI * 2 / segments.length;
     var spinTime = 0;
     var spinTimeTotal = 0;
     var spinAngleTotal = 0;
-    
+
+    // Generate colors using HSL
     function generateColors(n) {
-      var colors = [];
+      var arr = [];
       for (var i = 0; i < n; i++) {
         var hue = Math.floor(360 * i / n);
-        // Using 80% saturation for vibrant colors
-        colors.push("hsl(" + hue + ", 80%, 60%)");
+        arr.push("hsl(" + hue + ", 80%, 60%)");
       }
-      return colors;
+      return arr;
     }
-    
+
+    // Wrap text so it fits within maxWidth
+    function wrapText(context, text, maxWidth) {
+      var words = text.split(" ");
+      var lines = [];
+      var currentLine = words[0];
+
+      for (var i = 1; i < words.length; i++) {
+        var word = words[i];
+        var width = context.measureText(currentLine + " " + word).width;
+        if (width < maxWidth) {
+          currentLine += " " + word;
+        } else {
+          lines.push(currentLine);
+          currentLine = word;
+        }
+      }
+      lines.push(currentLine);
+      return lines;
+    }
+
+    // Draw the wheel with wrapped text for each segment
     function drawWheel() {
       var outsideRadius = 200;
       var textRadius = 160;
-      var insideRadius = 50;
+      // Smaller central white circle (insideRadius = 30)
+      var insideRadius = 30;
       ctx.clearRect(0, 0, canvas.width, canvas.height);
-      ctx.strokeStyle = "white";
       ctx.lineWidth = 2;
+      ctx.strokeStyle = "white";
       ctx.font = "bold 16px 'Montserrat', sans-serif";
-      
+
       // Update arc based on current segments count
       arc = Math.PI * 2 / segments.length;
-      
+
       for (var i = 0; i < segments.length; i++) {
         var angle = startAngle + i * arc;
         ctx.fillStyle = colors[i];
@@ -144,39 +272,51 @@
         ctx.arc(250, 250, insideRadius, angle + arc, angle, true);
         ctx.fill();
         ctx.stroke();
-        
-        // Draw the segment text
+
+        // Draw the segment text with wrapping if needed
         ctx.save();
         ctx.fillStyle = "#fff";
+        // Move to the middle of the segment
         ctx.translate(250 + Math.cos(angle + arc/2) * textRadius, 250 + Math.sin(angle + arc/2) * textRadius);
         ctx.rotate(angle + arc/2 + Math.PI/2);
+
         var text = segments[i];
-        ctx.fillText(text, -ctx.measureText(text).width / 2, 0);
+        // Set max width based on arc length at the text radius (slightly smaller than full arc length)
+        var maxWidth = arc * textRadius * 0.9;
+        var lines = wrapText(ctx, text, maxWidth);
+        var lineHeight = 18;
+        // Center multiple lines vertically
+        var offset = -((lines.length - 1) / 2) * lineHeight;
+        for (var j = 0; j < lines.length; j++) {
+          var line = lines[j];
+          ctx.fillText(line, -ctx.measureText(line).width / 2, offset + j * lineHeight);
+        }
         ctx.restore();
       }
     }
-    
+
+    // Spin the wheel with an ease-out effect
     function rotateWheel() {
       spinTime += 30;
       if (spinTime >= spinTimeTotal) {
         stopRotateWheel();
         return;
       }
-      // Ease-out effect for smooth deceleration
       var spinAngle = easeOut(spinTime, 0, spinAngleTotal, spinTimeTotal);
       startAngle += (spinAngle * Math.PI / 180);
       drawWheel();
       requestAnimationFrame(rotateWheel);
     }
-    
+
+    // When spin stops, calculate which segment is selected
     function stopRotateWheel() {
-      // For a pointer above the wheel (pointing down), add 90 degrees
+      // For a pointer above the wheel, add 90 degrees
       var degrees = startAngle * 180 / Math.PI + 90;
       var arcd = arc * 180 / Math.PI;
       var index = Math.floor((360 - degrees % 360) / arcd);
-      document.getElementById("result").innerHTML = "Result: " + segments[index];
+      resultDiv.innerHTML = "Result: " + segments[index];
     }
-    
+
     // Ease-out function for smooth deceleration
     function easeOut(t, b, c, d) {
       t /= d;
@@ -184,35 +324,37 @@
       var tc = ts * t;
       return b + c * (tc - 3 * ts + 3 * t);
     }
-    
+
     // Spin button event listener
     document.getElementById("spinButton").addEventListener("click", function() {
       spinTime = 0;
-      // Increase total spin time (6-9 seconds) for a slower, realistic spin
+      // Set spin duration between 6 and 9 seconds
       spinTimeTotal = Math.random() * 3000 + 6000;
       spinAngleTotal = Math.random() * 1000 + 1500;
       rotateWheel();
     });
-    
-    // Real-time update of wheel segments from textbox input
-    document.getElementById("namesInput").addEventListener("input", function() {
+
+    // Update segments in real time from the textarea (one item per line)
+    namesInput.addEventListener("input", function() {
       var input = this.value;
-      // If there's any input, update segments; otherwise revert to default segments
       if (input.trim() !== "") {
-        segments = input.split(",").map(function(name) {
-          return name.trim();
-        }).filter(function(name) {
-          return name !== "";
+        segments = input.split("\n").map(function(line) {
+          return line.trim();
+        }).filter(function(line) {
+          return line !== "";
         });
       } else {
         segments = defaultSegments.slice();
       }
-      colors = generateColors(segments.length);
-      // Reset starting angle so changes are immediately visible
+      // Regenerate colors only if the number of segments has changed
+      if (segments.length !== lastSegmentCount) {
+        colors = generateColors(segments.length);
+        lastSegmentCount = segments.length;
+      }
       startAngle = 0;
       drawWheel();
     });
-    
+
     // Draw the initial wheel
     drawWheel();
   </script>
