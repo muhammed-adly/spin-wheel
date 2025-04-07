@@ -4,7 +4,7 @@
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1" />
   <title>Spin the Wheel Game</title>
-  <link href="https://fonts.googleapis.com/css?family=Montserrat:400,700&display=swap" rel="stylesheet" />
+  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;700&display=swap" rel="stylesheet" />
   <style>
     /* Reset and global styles */
     * {
@@ -17,15 +17,15 @@
       width: 100%;
     }
     body {
-      font-family: 'Montserrat', sans-serif;
-      background: #f0f0f5;
+      font-family: 'Poppins', sans-serif;
+      background: #fafafa;
       color: #333;
       line-height: 1.6;
       text-align: center;
       padding: 20px;
     }
     a {
-      color: #007BFF;
+      color: #8e44ad;
       text-decoration: none;
       margin: 0 10px;
       cursor: pointer;
@@ -41,8 +41,8 @@
       width: 100%;
     }
     header h1 {
-      font-size: 2.5em;
-      color: #007BFF;
+      font-size: 2.8em;
+      color: #8e44ad;
       margin-bottom: 10px;
     }
     header nav a {
@@ -66,7 +66,7 @@
       display: flex;
       flex-wrap: wrap;
       justify-content: space-evenly;
-      align-items: flex-start;
+      align-items: center;
       width: 100%;
       padding: 20px;
     }
@@ -88,7 +88,7 @@
       transition: border-color 0.3s;
     }
     #textInputContainer textarea:focus {
-      border-color: #007BFF;
+      border-color: #8e44ad;
     }
     /* Wheel container styles */
     #wheelContainer {
@@ -121,7 +121,7 @@
       font-size: 16px;
       padding: 10px 20px;
       cursor: pointer;
-      background: linear-gradient(45deg, #007BFF, #00C6FF);
+      background: linear-gradient(45deg, #8e44ad, #3498db);
       border: none;
       border-radius: 25px;
       color: #fff;
@@ -130,12 +130,34 @@
       display: block;
     }
     .btn:hover {
-      background: linear-gradient(45deg, #0056b3, #0098cc);
+      background: linear-gradient(45deg, #732d91, #2980b9);
       transform: scale(1.05);
     }
     footer {
       font-size: 0.9em;
       width: 100%;
+    }
+    /* Popup modal styles */
+    .popup {
+      display: none;
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      background: rgba(0,0,0,0.5);
+      justify-content: center;
+      align-items: center;
+      z-index: 1000;
+    }
+    .popup-content {
+      background: #fff;
+      padding: 30px;
+      border-radius: 8px;
+      box-shadow: 0 2px 10px rgba(0,0,0,0.3);
+      text-align: center;
+      max-width: 90%;
+      margin: auto;
     }
   </style>
 </head>
@@ -156,7 +178,14 @@
       <!-- Text input container -->
       <div id="textInputContainer">
         <h3>Enter one item per line:</h3>
-        <textarea id="namesInput" placeholder="Item 1&#10;Item 2&#10;Item 3"></textarea>
+        <textarea id="namesInput">Prize 1
+Prize 2
+Prize 3
+Prize 4
+Prize 5
+Prize 6
+Prize 7
+Prize 8</textarea>
       </div>
       <!-- Wheel container -->
       <div id="wheelContainer">
@@ -165,7 +194,6 @@
       </div>
     </div>
     <button class="btn" id="spinButton">Spin!</button>
-    <h2 id="result"></h2>
   </section>
 
   <!-- Terms & Conditions Section (Collapsed by default) -->
@@ -195,6 +223,15 @@
     </p>
   </section>
 
+  <!-- Popup Modal for Celebration -->
+  <div id="popup" class="popup">
+    <div class="popup-content">
+      <h2>Congratulations!</h2>
+      <p id="popupResult"></p>
+      <button id="closePopup" class="btn">Close</button>
+    </div>
+  </div>
+
   <!-- Footer -->
   <footer>
     &copy; 2025 Spin the Wheel Game. All rights reserved.
@@ -205,25 +242,27 @@
     var canvas = document.getElementById("wheelCanvas");
     var ctx = canvas.getContext("2d");
     var namesInput = document.getElementById("namesInput");
-    var resultDiv = document.getElementById("result");
+    var popup = document.getElementById("popup");
+    var popupResult = document.getElementById("popupResult");
+    var closePopup = document.getElementById("closePopup");
 
     // Default segments if textarea is empty
     var defaultSegments = ["Prize 1", "Prize 2", "Prize 3", "Prize 4", "Prize 5", "Prize 6", "Prize 7", "Prize 8"];
     var segments = defaultSegments.slice();
 
-    // Generate vibrant colors based on the number of segments
+    // Generate vibrant colors based on the number of segments (fixed saturation/lightness)
     var colors = generateColors(segments.length);
-    var lastSegmentCount = segments.length; // to ensure colors only update if count changes
+    var lastSegmentCount = segments.length; // update colors only if count changes
 
     var startAngle = 0;
     var arc = Math.PI * 2 / segments.length;
     var spinTime = 0;
     var spinTimeTotal = 0;
     var spinAngleTotal = 0;
+    var idleAnimationId;
 
-    // Responsive canvas size
+    // Update canvas size responsively
     function updateCanvasSize() {
-      // Set canvas size as 90% of window width or max 500, whichever is smaller
       var newSize = Math.min(window.innerWidth * 0.9, 500);
       canvas.width = newSize;
       canvas.height = newSize;
@@ -235,17 +274,16 @@
       var arr = [];
       for (var i = 0; i < n; i++) {
         var hue = Math.floor(360 * i / n);
-        arr.push("hsl(" + hue + ", 80%, 60%)");
+        arr.push("hsl(" + hue + ", 70%, 50%)");
       }
       return arr;
     }
 
-    // Wrap text so it fits within maxWidth
+    // Wrap text to fit within maxWidth
     function wrapText(context, text, maxWidth) {
       var words = text.split(" ");
       var lines = [];
       var currentLine = words[0];
-
       for (var i = 1; i < words.length; i++) {
         var word = words[i];
         var width = context.measureText(currentLine + " " + word).width;
@@ -260,22 +298,19 @@
       return lines;
     }
 
-    // Draw the wheel with wrapped text for each segment using dynamic sizing
+    // Draw the wheel with wrapped text for each segment
     function drawWheel() {
       var canvasSize = canvas.width;
       var centerX = canvasSize / 2;
       var centerY = canvasSize / 2;
       var outsideRadius = centerX - 20; // 20px padding
       var textRadius = outsideRadius - 40;
-      var insideRadius = canvasSize * 0.06; // proportionate inner circle (e.g. 30 when canvas=500)
+      var insideRadius = canvasSize * 0.06; // proportionate inner circle
       ctx.clearRect(0, 0, canvas.width, canvas.height);
       ctx.lineWidth = 2;
       ctx.strokeStyle = "white";
-      ctx.font = "bold 16px 'Montserrat', sans-serif";
-
-      // Update arc if segments have changed
+      ctx.font = "bold 16px 'Poppins', sans-serif";
       arc = Math.PI * 2 / segments.length;
-
       for (var i = 0; i < segments.length; i++) {
         var angle = startAngle + i * arc;
         ctx.fillStyle = colors[i];
@@ -284,65 +319,73 @@
         ctx.arc(centerX, centerY, insideRadius, angle + arc, angle, true);
         ctx.fill();
         ctx.stroke();
-
-        // Draw the segment text with wrapping if needed
         ctx.save();
         ctx.fillStyle = "#fff";
         ctx.translate(centerX + Math.cos(angle + arc/2) * textRadius,
                       centerY + Math.sin(angle + arc/2) * textRadius);
         ctx.rotate(angle + arc/2 + Math.PI/2);
-
         var text = segments[i];
         var maxWidth = arc * textRadius * 0.9;
         var lines = wrapText(ctx, text, maxWidth);
         var lineHeight = 18;
         var offset = -((lines.length - 1) / 2) * lineHeight;
         for (var j = 0; j < lines.length; j++) {
-          var line = lines[j];
-          ctx.fillText(line, -ctx.measureText(line).width / 2, offset + j * lineHeight);
+          ctx.fillText(lines[j], -ctx.measureText(lines[j]).width / 2, offset + j * lineHeight);
         }
         ctx.restore();
       }
     }
 
-    // Spin the wheel with an ease-out effect
+    // Idle rotation: slowly rotate the wheel until spin is clicked
+    function idleRotate() {
+      startAngle += 0.005;
+      drawWheel();
+      idleAnimationId = requestAnimationFrame(idleRotate);
+    }
+
+    // Spin the wheel using an ease-out cubic effect
     function rotateWheel() {
       spinTime += 30;
       if (spinTime >= spinTimeTotal) {
         stopRotateWheel();
         return;
       }
-      var spinAngle = easeOut(spinTime, 0, spinAngleTotal, spinTimeTotal);
+      var t = spinTime, b = 0, c = spinAngleTotal, d = spinTimeTotal;
+      var spinAngle = c * (Math.pow(t/d - 1, 3) + 1); 
       startAngle += (spinAngle * Math.PI / 180);
       drawWheel();
       requestAnimationFrame(rotateWheel);
     }
 
-    // When spin stops, calculate which segment is selected
+    // Stop spin, show result in popup, and do NOT resume idle rotation
     function stopRotateWheel() {
       var degrees = startAngle * 180 / Math.PI + 90; // adjust for pointer position
       var arcd = arc * 180 / Math.PI;
       var index = Math.floor((360 - degrees % 360) / arcd);
-      resultDiv.innerHTML = "Result: " + segments[index];
+      showPopup(segments[index]);
     }
 
-    // Ease-out function for smooth deceleration
-    function easeOut(t, b, c, d) {
-      t /= d;
-      var ts = t * t;
-      var tc = ts * t;
-      return b + c * (tc - 3 * ts + 3 * t);
+    // Show popup with celebration message
+    function showPopup(result) {
+      popupResult.innerHTML = "You won: " + result + "!";
+      popup.style.display = "flex";
     }
 
-    // Spin button event listener
+    // Close popup when close button is clicked
+    closePopup.addEventListener("click", function() {
+      popup.style.display = "none";
+    });
+
+    // Spin button event: cancel idle rotation and spin the wheel once
     document.getElementById("spinButton").addEventListener("click", function() {
+      cancelAnimationFrame(idleAnimationId);
       spinTime = 0;
-      spinTimeTotal = Math.random() * 3000 + 6000; // 6-9 seconds
+      spinTimeTotal = Math.random() * 3000 + 6000;
       spinAngleTotal = Math.random() * 1000 + 1500;
       rotateWheel();
     });
 
-    // Update segments in real time from the textarea (one item per line)
+    // Update segments in real time from textarea input
     namesInput.addEventListener("input", function() {
       var input = this.value;
       if (input.trim() !== "") {
@@ -370,6 +413,13 @@
       document.getElementById(id).style.display = "block";
       if(id === "gameSection"){
         updateCanvasSize();
+        // Start idle rotation only if the game hasn't been spun yet.
+        // (After first spin, idle rotation is canceled.)
+        if(spinTimeTotal === 0){
+          idleAnimationId = requestAnimationFrame(idleRotate);
+        }
+      } else {
+        cancelAnimationFrame(idleAnimationId);
       }
     }
 
@@ -386,11 +436,12 @@
       showSection("privacy");
     });
 
-    // Initialize: Set up canvas size and show game section
+    // Initialize: set canvas size, draw initial wheel, and start idle rotation
     updateCanvasSize();
+    drawWheel();
+    idleAnimationId = requestAnimationFrame(idleRotate);
     showSection("gameSection");
 
-    // Update canvas size on window resize for responsiveness
     window.addEventListener("resize", updateCanvasSize);
   </script>
 </body>
