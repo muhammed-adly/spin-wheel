@@ -313,7 +313,7 @@ Prize 8</textarea>
       return lines;
     }
 
-    // Draw the wheel with horizontal text that remains fixed in orientation
+    // Draw the wheel with horizontal text that rotates with the wheel
     function drawWheel() {
       var canvasSize = canvas.width;
       var centerX = canvasSize / 2;
@@ -337,15 +337,15 @@ Prize 8</textarea>
         ctx.fill();
         ctx.stroke();
         
-        // Draw horizontal text:
-        // 1. Compute the position on the circle at the middle of the segment.
+        // Draw text without counter-rotation so it moves with the wheel.
+        // Compute the center position of the segment:
         var posX = centerX + Math.cos(angle + arc / 2) * textRadius;
         var posY = centerY + Math.sin(angle + arc / 2) * textRadius;
         ctx.save();
         ctx.fillStyle = "#fff";
+        // Translate to the segment's center position
         ctx.translate(posX, posY);
-        // Cancel out the rotation of the segment so text remains horizontal.
-        ctx.rotate(-(angle + arc / 2));
+        // DO NOT cancel the wheel's rotation – text will rotate with the segment.
         var text = segments[i];
         var maxWidth = arc * textRadius * 0.9;
         var lines = wrapText(ctx, text, maxWidth);
@@ -358,7 +358,7 @@ Prize 8</textarea>
       }
     }
 
-    // Easing function (easeOutQuart) for a smoother deceleration
+    // Easing function (easeOutQuart) for smoother deceleration
     function easeOutQuart(t, b, c, d) {
       t /= d;
       t--;
