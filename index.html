@@ -261,13 +261,13 @@ Prize 8</textarea>
     var popup = document.getElementById("popup");
     var popupResult = document.getElementById("popupResult");
     var closePopup = document.getElementById("closePopup");
-    
+
     var defaultSegments = ["Prize 1", "Prize 2", "Prize 3", "Prize 4", "Prize 5", "Prize 6", "Prize 7", "Prize 8"];
     var segments = defaultSegments.slice();
-    
+
     var colors = generateColors(segments.length);
     var lastSegmentCount = segments.length; // update colors only if count changes
-    
+
     var startAngle = 0;
     var arc = Math.PI * 2 / segments.length;
     var spinTime = 0;
@@ -275,15 +275,15 @@ Prize 8</textarea>
     var spinAngleTotal = 0;
     var idleAnimationId;
     var hasSpun = false; // flag to stop idle rotation after first spin
-    
-    // Responsive canvas size
+
+    // Update canvas size responsively
     function updateCanvasSize() {
       var newSize = Math.min(window.innerWidth * 0.9, 500);
       canvas.width = newSize;
       canvas.height = newSize;
       drawWheel();
     }
-    
+
     // Generate colors using HSL
     function generateColors(n) {
       var arr = [];
@@ -293,7 +293,7 @@ Prize 8</textarea>
       }
       return arr;
     }
-    
+
     // Wrap text to fit within maxWidth
     function wrapText(context, text, maxWidth) {
       var words = text.split(" ");
@@ -312,8 +312,8 @@ Prize 8</textarea>
       lines.push(currentLine);
       return lines;
     }
-    
-    // Draw the wheel with horizontally oriented text
+
+    // Draw the wheel with horizontal text that remains fixed in orientation
     function drawWheel() {
       var canvasSize = canvas.width;
       var centerX = canvasSize / 2;
@@ -337,12 +337,15 @@ Prize 8</textarea>
         ctx.fill();
         ctx.stroke();
         
-        // Draw horizontal text (no rotation)
+        // Draw horizontal text:
+        // 1. Compute the position on the circle at the middle of the segment.
+        var posX = centerX + Math.cos(angle + arc / 2) * textRadius;
+        var posY = centerY + Math.sin(angle + arc / 2) * textRadius;
         ctx.save();
         ctx.fillStyle = "#fff";
-        ctx.translate(centerX + Math.cos(angle + arc/2) * textRadius,
-                      centerY + Math.sin(angle + arc/2) * textRadius);
-        // Do not rotate so text remains horizontal
+        ctx.translate(posX, posY);
+        // Cancel out the rotation of the segment so text remains horizontal.
+        ctx.rotate(-(angle + arc / 2));
         var text = segments[i];
         var maxWidth = arc * textRadius * 0.9;
         var lines = wrapText(ctx, text, maxWidth);
@@ -354,15 +357,15 @@ Prize 8</textarea>
         ctx.restore();
       }
     }
-    
-    // Easing function for a smoother deceleration (easeOutQuart)
+
+    // Easing function (easeOutQuart) for a smoother deceleration
     function easeOutQuart(t, b, c, d) {
       t /= d;
       t--;
       return -c * (t*t*t*t - 1) + b;
     }
-    
-    // Spin the wheel using the new easing function
+
+    // Spin the wheel using the easing function
     function rotateWheel() {
       spinTime += 30;
       if (spinTime >= spinTimeTotal) {
@@ -374,38 +377,44 @@ Prize 8</textarea>
       drawWheel();
       requestAnimationFrame(rotateWheel);
     }
-    
-    // Stop the spin, show result in a popup, and do NOT resume idle rotation
+
+    // Stop the spin, show the result in a popup, and do not resume idle rotation
     function stopRotateWheel() {
       var degrees = startAngle * 180 / Math.PI + 90; // adjust for pointer position
       var arcd = arc * 180 / Math.PI;
       var index = Math.floor((360 - degrees % 360) / arcd);
       showPopup(segments[index]);
     }
-    
+
     // Show popup with celebration message
     function showPopup(result) {
       popupResult.innerHTML = "You won: " + result + "!";
       popup.style.display = "flex";
     }
-    
+
     // Close popup when close button is clicked
     closePopup.addEventListener("click", function() {
       popup.style.display = "none";
     });
-    
-    // Spin button event: cancel idle rotation, set flag, and spin the wheel once
+
+    // Idle rotation: slowly rotate the wheel until spin is clicked
+    function idleRotate() {
+      if (hasSpun) return; // Stop idle rotation after first spin
+      startAngle += 0.005;
+      drawWheel();
+      idleAnimationId = requestAnimationFrame(idleRotate);
+    }
+
+    // Spin button event: cancel idle rotation, mark that a spin has occurred, and spin the wheel once
     document.getElementById("spinButton").addEventListener("click", function() {
-      if (!hasSpun) {
-        hasSpun = true;
-      }
+      if (!hasSpun) { hasSpun = true; }
       cancelAnimationFrame(idleAnimationId);
       spinTime = 0;
       spinTimeTotal = Math.random() * 3000 + 6000; // 6-9 seconds
       spinAngleTotal = Math.random() * 1000 + 1500;
       rotateWheel();
     });
-    
+
     // Update segments in real time from textarea input
     namesInput.addEventListener("input", function() {
       var input = this.value;
@@ -425,7 +434,7 @@ Prize 8</textarea>
       startAngle = 0;
       drawWheel();
     });
-    
+
     // Navigation: Show selected section and hide others
     function showSection(id) {
       document.getElementById("gameSection").style.display = "none";
@@ -434,7 +443,6 @@ Prize 8</textarea>
       document.getElementById(id).style.display = "block";
       if (id === "gameSection") {
         updateCanvasSize();
-        // Only start idle rotation if no spin has ever been performed
         if (!hasSpun) {
           idleAnimationId = requestAnimationFrame(idleRotate);
         }
@@ -455,13 +463,6 @@ Prize 8</textarea>
       e.preventDefault();
       showSection("privacy");
     });
-    
-    // Idle rotation: slowly rotate the wheel until spin is clicked
-    function idleRotate() {
-      startAngle += 0.005;
-      drawWheel();
-      idleAnimationId = requestAnimationFrame(idleRotate);
-    }
     
     // Initialize: set canvas size, draw initial wheel, and start idle rotation (if not spun)
     updateCanvasSize();
