@@ -3,400 +3,354 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1" />
-  <title>Spin the Wheel Game</title>
+  <title>Fancy Spin the Wheel</title>
   <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;700&display=swap" rel="stylesheet" />
   <style>
-    /* Reset and global styles */
-    * { box-sizing: border-box; margin: 0; padding: 0; }
-    html, body { height: 100%; width: 100%; }
+    * {
+      box-sizing: border-box; margin: 0; padding: 0;
+    }
+    html, body {
+      height: 100%; width: 100%;
+    }
     body {
       font-family: 'Poppins', sans-serif;
-      background: #fafafa;
+      background: #f9f9f9;
       color: #333;
-      line-height: 1.6;
       text-align: center;
       padding: 20px;
     }
-    a { color: #8e44ad; text-decoration: none; margin: 0 10px; cursor: pointer; }
-    a:hover { text-decoration: underline; }
     header, footer {
-      background: #fff; padding: 20px; text-align: center;
-      box-shadow: 0 2px 4px rgba(0,0,0,0.1); width: 100%;
+      background: #fff;
+      padding: 20px;
+      box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+      margin-bottom: 20px;
     }
-    header h1 { font-size: 2.8em; color: #8e44ad; margin-bottom: 10px; }
-    header nav a { font-size: 1.1em; margin: 0 15px; }
-    section {
-      width: 100%; padding: 20px; margin: 20px 0;
-      background: #fff; border-radius: 4px;
-      box-shadow: 0 2px 6px rgba(0,0,0,0.1);
+    h1 {
+      font-size: 2.4em;
+      color: #8e44ad;
+      margin-bottom: 0;
     }
-    /* Hide sections by default except the game */
-    #terms, #privacy { display: none; }
-    /* Flex container for game area */
-    #gameContainer {
-      display: flex; flex-direction: column;
-      align-items: center; width: 100%; padding: 20px; gap: 20px;
-    }
-    /* On larger screens, switch to row layout */
-    @media (min-width: 768px) {
-      #gameContainer { flex-direction: row; justify-content: space-evenly; }
-    }
-    /* Wheel container styles */
-    #wheelContainer {
-      position: relative; max-width: 500px; width: 100%;
-    }
-    #wheelCanvas {
-      box-shadow: 0 4px 10px rgba(0,0,0,0.15);
-      border-radius: 50%; display: block; margin: 0 auto;
-    }
-    /* Pointer styling: placed above the circle, pointing down */
-    #pointer {
-      width: 0; height: 0;
-      border-left: 20px solid transparent;
-      border-right: 20px solid transparent;
-      border-top: 30px solid #333;
-      position: absolute; top: -30px; left: 50%;
-      transform: translateX(-50%);
-      z-index: 10;
-    }
-    /* Text input container */
-    #textInputContainer { max-width: 400px; width: 100%; }
-    /* Textarea styles */
-    #textInputContainer textarea {
-      width: 100%; padding: 10px; font-size: 16px;
-      border: 1px solid #ccc; border-radius: 4px; resize: vertical; outline: none;
-      transition: border-color 0.3s;
-    }
-    #textInputContainer textarea:focus { border-color: #8e44ad; }
-    @media (max-width: 767px) {
-      #textInputContainer textarea { height: 200px; }
-    }
-    @media (min-width: 768px) {
-      #textInputContainer textarea { height: 300px; }
-    }
-    /* Button styling */
     .btn {
-      font-size: 16px; padding: 10px 20px; cursor: pointer;
+      font-size: 16px;
+      padding: 10px 20px;
+      cursor: pointer;
       background: linear-gradient(45deg, #8e44ad, #3498db);
-      border: none; border-radius: 25px; color: #fff;
+      border: none;
+      border-radius: 25px;
+      color: #fff;
       transition: background 0.3s, transform 0.2s;
-      margin: 20px auto; display: block;
+      margin: 20px auto;
+      display: inline-block;
     }
     .btn:hover {
       background: linear-gradient(45deg, #732d91, #2980b9);
       transform: scale(1.05);
     }
-    footer { font-size: 0.9em; width: 100%; }
-    /* Popup modal styles */
-    .popup {
-      display: none; position: fixed; top: 0; left: 0;
+    /* Wheel container */
+    #wheelContainer {
+      position: relative;
+      max-width: 600px;
+      margin: 0 auto;
+    }
+    #wheelCanvas {
+      width: 100%;
+      height: auto;
+      display: block;
+      margin: 0 auto;
+      border-radius: 50%;
+      box-shadow: 0 4px 10px rgba(0,0,0,0.1);
+    }
+    /* The star pointer */
+    #starPointer {
+      position: absolute;
+      top: 0;
+      left: 50%;
+      transform: translateX(-50%) translateY(-45px);
+      font-size: 36px;
+      z-index: 10;
+      pointer-events: none;
+    }
+    /* Center message overlay */
+    #centerMessage {
+      position: absolute;
+      top: 50%; left: 50%;
+      transform: translate(-50%, -50%);
+      color: #fff;
+      font-size: 1.2em;
+      font-weight: bold;
+      text-shadow: 1px 1px 2px rgba(0,0,0,0.4);
+      pointer-events: none;
+      width: 80%;
+      max-width: 300px;
+      line-height: 1.4;
+    }
+    /* Celebration popup */
+    #popup {
+      display: none;
+      position: fixed;
+      top: 0; left: 0;
       width: 100%; height: 100%;
       background: rgba(0,0,0,0.5);
       justify-content: center; align-items: center;
-      z-index: 1000;
+      z-index: 9999;
     }
-    .popup-content {
-      background: #fff; padding: 30px; border-radius: 8px;
+    #popupContent {
+      background: #fff;
+      padding: 30px;
+      border-radius: 8px;
       box-shadow: 0 2px 10px rgba(0,0,0,0.3);
-      text-align: center; max-width: 90%; margin: auto;
+      text-align: center;
+      max-width: 90%;
+      margin: auto;
+    }
+    #popup h2 {
+      margin-bottom: 15px;
+      color: #8e44ad;
     }
   </style>
 </head>
 <body>
-  <!-- Header with Title Above Navigation -->
-  <header>
-    <h1>Spin the Wheel Game</h1>
-    <nav>
-      <a id="navGame" href="#gameSection">Home</a>
-      <a id="navTerms" href="#terms">Terms &amp; Conditions</a>
-      <a id="navPrivacy" href="#privacy">Privacy Policy</a>
-    </nav>
-  </header>
 
-  <!-- Main Game Section (Visible by default) -->
-  <section id="gameSection">
-    <div id="gameContainer">
-      <!-- Wheel container -->
-      <div id="wheelContainer">
-        <div id="pointer"></div>
-        <canvas id="wheelCanvas"></canvas>
-      </div>
-      <!-- Text input container -->
-      <div id="textInputContainer">
-        <h3>Enter one item per line:</h3>
-        <textarea id="namesInput">Prize 1
-Prize 2
-Prize 3
-Prize 4
-Prize 5
-Prize 6
-Prize 7
-Prize 8</textarea>
-      </div>
-    </div>
-    <button class="btn" id="spinButton">Spin!</button>
-  </section>
+<header>
+  <h1>Fancy Spin the Wheel</h1>
+</header>
 
-  <!-- Terms & Conditions Section (Collapsed by default) -->
-  <section id="terms">
-    <h2>Terms &amp; Conditions</h2>
-    <p>
-      These terms and conditions outline the rules and regulations for the use of our Spin the Wheel Game website.
-      By accessing this website, you accept these terms and conditions in full. If you disagree with these terms
-      and conditions, please do not use our website.
-    </p>
-    <p>
-      The content of this website is for your general information and use only. We reserve the right to make changes
-      at any time without notice.
-    </p>
-  </section>
-
-  <!-- Privacy Policy Section (Collapsed by default) -->
-  <section id="privacy">
-    <h2>Privacy Policy</h2>
-    <p>
-      We are committed to protecting your privacy. This privacy policy explains how we collect, use, disclose, and safeguard
-      your information when you visit our website.
-    </p>
-    <p>
-      By using our website, you consent to our privacy policy. We do not share your personal information with third parties
-      without your consent except as required by law.
-    </p>
-  </section>
-
-  <!-- Popup Modal for Celebration -->
-  <div id="popup" class="popup">
-    <div class="popup-content">
-      <h2>Congratulations!</h2>
-      <p id="popupResult"></p>
-      <button id="closePopup" class="btn">Close</button>
-    </div>
+<main>
+  <div id="wheelContainer">
+    <!-- Star Pointer -->
+    <div id="starPointer">⭐</div>
+    <!-- Canvas for the wheel -->
+    <canvas id="wheelCanvas" width="500" height="500"></canvas>
+    <!-- Center message -->
+    <div id="centerMessage">Click OR Press (Ctrl + Enter) to spin</div>
   </div>
 
-  <!-- Footer -->
-  <footer>
-    &copy; 2025 Spin the Wheel Game. All rights reserved.
-  </footer>
+  <br>
+  <button id="spinBtn" class="btn">Spin!</button>
+</main>
 
-  <script>
-    // Global variables and DOM elements
-    var canvas = document.getElementById("wheelCanvas");
-    var ctx = canvas.getContext("2d");
-    var namesInput = document.getElementById("namesInput");
-    var popup = document.getElementById("popup");
-    var popupResult = document.getElementById("popupResult");
-    var closePopup = document.getElementById("closePopup");
+<!-- Celebration popup -->
+<div id="popup">
+  <div id="popupContent">
+    <h2>Congratulations!</h2>
+    <p id="popupResult"></p>
+    <button id="closePopup" class="btn">Close</button>
+  </div>
+</div>
 
-    var defaultSegments = ["Prize 1", "Prize 2", "Prize 3", "Prize 4", "Prize 5", "Prize 6", "Prize 7", "Prize 8"];
-    var segments = defaultSegments.slice();
+<footer>
+  <p>&copy; 2025 Fancy Wheel. All rights reserved.</p>
+</footer>
 
-    var colors = generateColors(segments.length);
-    var lastSegmentCount = segments.length; // update colors only if count changes
+<script>
+  /************************************************************
+   * CONFIGURABLE PARTS
+   ************************************************************/
+  // Example: many items (including emojis)
+  // Feel free to replace or add more items
+  const segments = [
+    "Lion 🦁", "Tiger 🐯", "Elephant 🐘", "Zebra 🦓", "Monkey 🐒",
+    "Kangaroo 🦘", "Bear 🧸", "Frog 🐸", "Horse 🐴", "Giraffe 🦒",
+    "Hippo 🦛", "Rhino 🦏", "Fox 🦊", "Wolf 🐺", "Goat 🐐",
+    "Rabbit 🐇", "Panda 🐼", "Duck 🦆", "Turkey 🦃", "Octopus 🐙",
+    "Shark 🦈", "Penguin 🐧", "Chicken 🐔", "Snake 🐍", "Camel 🐪",
+    "Whale 🐳", "Dolphin 🐬", "Koala 🐨", "Lizard 🦎", "Crocodile 🐊",
+  ];
 
-    var startAngle = 0;
-    var arc = Math.PI * 2 / segments.length;
-    var spinTime = 0;
-    var spinTimeTotal = 0;
-    var spinAngleTotal = 0;
-    var idleAnimationId;
-    var hasSpun = false; // flag to stop idle rotation after first spin
+  // How many seconds of spin (between 4 and 7)
+  const MIN_SPIN_MS = 4000;
+  const MAX_SPIN_MS = 7000;
+  // Maximum spin angle in degrees
+  const MIN_ANGLE = 1000;
+  const MAX_ANGLE = 2000;
 
-    // Update canvas size responsively
-    function updateCanvasSize() {
-      var newSize = Math.min(window.innerWidth * 0.9, 500);
-      canvas.width = newSize;
-      canvas.height = newSize;
-      drawWheel();
+  /************************************************************
+   * INTERNALS
+   ************************************************************/
+  const canvas = document.getElementById("wheelCanvas");
+  const ctx = canvas.getContext("2d");
+  const spinBtn = document.getElementById("spinBtn");
+  const popup = document.getElementById("popup");
+  const popupResult = document.getElementById("popupResult");
+  const closePopup = document.getElementById("closePopup");
+  const centerMessage = document.getElementById("centerMessage");
+
+  // For a dynamic color scheme
+  const colors = [];
+  let startAngle = 0;        // The wheel's rotation
+  let arc = Math.PI * 2 / segments.length;
+  let spinTime = 0;
+  let spinTimeTotal = 0;
+  let spinAngleTotal = 0;
+
+  // Idle rotation variables
+  let idleReqId = null;
+  let hasSpun = false;
+
+  // Generate colors
+  function generateColors() {
+    for (let i = 0; i < segments.length; i++) {
+      const hue = Math.floor((360 * i) / segments.length);
+      colors[i] = `hsl(${hue}, 70%, 50%)`;
     }
+  }
 
-    // Generate colors using HSL
-    function generateColors(n) {
-      var arr = [];
-      for (var i = 0; i < n; i++) {
-        var hue = Math.floor(360 * i / n);
-        arr.push("hsl(" + hue + ", 70%, 50%)");
+  // Easing function for a smooth deceleration (easeOutQuart)
+  function easeOutQuart(t, b, c, d) {
+    t /= d; t--;
+    return -c * (t*t*t*t - 1) + b;
+  }
+
+  // Draw the wheel
+  function drawWheel() {
+    const size = canvas.width;
+    const center = size / 2;
+    const outerRadius = center - 10;
+    const innerRadius = size * 0.06; // small circle at center
+    ctx.clearRect(0, 0, size, size);
+    ctx.lineWidth = 2;
+    ctx.strokeStyle = "#fff";
+    ctx.font = "bold 16px 'Poppins', sans-serif";
+
+    arc = (Math.PI * 2) / segments.length;
+
+    for (let i = 0; i < segments.length; i++) {
+      // Start angle for the slice
+      const sliceAngle = startAngle + i * arc;
+      // Draw slice
+      ctx.fillStyle = colors[i];
+      ctx.beginPath();
+      ctx.arc(center, center, outerRadius, sliceAngle, sliceAngle + arc, false);
+      ctx.arc(center, center, innerRadius, sliceAngle + arc, sliceAngle, true);
+      ctx.fill();
+      ctx.stroke();
+
+      // Draw text along the arc, tangent to the circle
+      ctx.save();
+      ctx.fillStyle = "#fff";
+      const midAngle = sliceAngle + arc / 2;
+      ctx.translate(center, center);
+      ctx.rotate(midAngle);
+      // Move outward to place text near the outer edge
+      ctx.textAlign = "center";
+      ctx.textBaseline = "middle";
+
+      // We'll place text slightly in from the edge
+      const textRadius = outerRadius * 0.8;
+      // Wrap text if needed
+      const label = segments[i];
+      const maxTextWidth = arc * textRadius; // approximate space for each arc
+      // We'll measure and break lines manually
+      const lines = wrapTextLines(ctx, label, maxTextWidth);
+
+      // The total height of the lines
+      const lineHeight = 18;
+      const totalHeight = lines.length * lineHeight;
+      let offsetY = -((lines.length - 1) / 2) * lineHeight;
+
+      // Move to the radius where text should appear
+      ctx.translate(0, -textRadius);
+
+      // Draw each line
+      for (let l = 0; l < lines.length; l++) {
+        ctx.fillText(lines[l], 0, offsetY + l * lineHeight);
       }
-      return arr;
+      ctx.restore();
     }
 
-    // Wrap text to fit within maxWidth
-    function wrapText(context, text, maxWidth) {
-      var words = text.split(" ");
-      var lines = [];
-      var currentLine = words[0];
-      for (var i = 1; i < words.length; i++) {
-        var word = words[i];
-        var width = context.measureText(currentLine + " " + word).width;
-        if (width < maxWidth) {
-          currentLine += " " + word;
-        } else {
-          lines.push(currentLine);
-          currentLine = word;
-        }
-      }
-      lines.push(currentLine);
-      return lines;
-    }
+    // If we want to show the center circle
+    // ctx.save();
+    // ctx.fillStyle = "#fff";
+    // ctx.beginPath();
+    // ctx.arc(center, center, innerRadius, 0, 2 * Math.PI);
+    // ctx.fill();
+    // ctx.restore();
+  }
 
-    // Draw the wheel with labels drawn with a fixed orientation relative to the circle
-    function drawWheel() {
-      var canvasSize = canvas.width;
-      var centerX = canvasSize / 2;
-      var centerY = canvasSize / 2;
-      var outsideRadius = centerX - 20; // 20px padding
-      var textRadius = outsideRadius - 40;
-      var insideRadius = canvasSize * 0.06; // proportionate inner circle
-      ctx.clearRect(0, 0, canvas.width, canvas.height);
-      ctx.lineWidth = 2;
-      ctx.strokeStyle = "white";
-      ctx.font = "bold 16px 'Poppins', sans-serif";
-      
-      arc = Math.PI * 2 / segments.length;
-      
-      for (var i = 0; i < segments.length; i++) {
-        var segStart = startAngle + i * arc;
-        var currentMidAngle = segStart + arc/2;
-        // Draw the segment shape
-        ctx.fillStyle = colors[i];
-        ctx.beginPath();
-        ctx.arc(centerX, centerY, outsideRadius, segStart, segStart + arc, false);
-        ctx.arc(centerX, centerY, insideRadius, segStart + arc, segStart, true);
-        ctx.fill();
-        ctx.stroke();
-        
-        // Compute the current position for the label (this moves with the wheel)
-        var posX = centerX + Math.cos(currentMidAngle) * textRadius;
-        var posY = centerY + Math.sin(currentMidAngle) * textRadius;
-        
-        // Compute a fixed label orientation independent of startAngle.
-        // For segment i, the fixed mid-angle is: fixedMid = i*arc + arc/2.
-        // To have the text point toward the center, its baseline should be rotated by (fixedMid - π/2).
-        var fixedMidAngle = i * arc + arc/2;
-        var textRotation = fixedMidAngle - Math.PI/2;
-        
-        ctx.save();
-        ctx.fillStyle = "#fff";
-        ctx.translate(posX, posY);
-        ctx.rotate(textRotation);
-        var text = segments[i];
-        var maxWidth = arc * textRadius * 0.9;
-        var lines = wrapText(ctx, text, maxWidth);
-        var lineHeight = 18;
-        var offset = -((lines.length - 1) / 2) * lineHeight;
-        for (var j = 0; j < lines.length; j++) {
-          ctx.fillText(lines[j], -ctx.measureText(lines[j]).width/2, offset + j * lineHeight);
-        }
-        ctx.restore();
-      }
-    }
-
-    // Easing function (easeOutQuart) for smoother deceleration
-    function easeOutQuart(t, b, c, d) {
-      t /= d;
-      t--;
-      return -c * (t*t*t*t - 1) + b;
-    }
-
-    // Spin the wheel using the easing function
-    function rotateWheel() {
-      spinTime += 30;
-      if (spinTime >= spinTimeTotal) {
-        stopRotateWheel();
-        return;
-      }
-      var spinAngle = easeOutQuart(spinTime, 0, spinAngleTotal, spinTimeTotal);
-      startAngle += (spinAngle * Math.PI / 180);
-      drawWheel();
-      requestAnimationFrame(rotateWheel);
-    }
-
-    // Stop the spin, show the result in a popup, and do not resume idle rotation
-    function stopRotateWheel() {
-      var degrees = startAngle * 180 / Math.PI + 90; // adjust for pointer position if any
-      var arcd = arc * 180 / Math.PI;
-      var index = Math.floor((360 - degrees % 360) / arcd);
-      showPopup(segments[index]);
-    }
-
-    // Show popup with celebration message
-    function showPopup(result) {
-      popupResult.innerHTML = "You won: " + result + "!";
-      popup.style.display = "flex";
-    }
-
-    // Close popup when close button is clicked
-    closePopup.addEventListener("click", function() {
-      popup.style.display = "none";
-    });
-
-    // Idle rotation: slowly rotate the wheel until spin is clicked
-    function idleRotate() {
-      if (hasSpun) return; // Stop idle rotation after first spin
-      startAngle += 0.005;
-      drawWheel();
-      idleAnimationId = requestAnimationFrame(idleRotate);
-    }
-
-    // Spin button event: cancel idle rotation, mark spin as done, and spin the wheel once
-    document.getElementById("spinButton").addEventListener("click", function() {
-      if (!hasSpun) { hasSpun = true; }
-      cancelAnimationFrame(idleAnimationId);
-      spinTime = 0;
-      spinTimeTotal = Math.random() * 3000 + 6000; // 6-9 seconds
-      spinAngleTotal = Math.random() * 1000 + 1500;
-      rotateWheel();
-    });
-
-    // Update segments in real time from textarea input
-    namesInput.addEventListener("input", function() {
-      var input = this.value;
-      if (input.trim() !== "") {
-        segments = input.split("\n").map(function(line) { return line.trim(); }).filter(function(line) { return line !== ""; });
+  // Simple function to wrap text into lines
+  function wrapTextLines(ctx, text, maxWidth) {
+    const words = text.split(" ");
+    let currentLine = words[0];
+    const lines = [];
+    for (let i = 1; i < words.length; i++) {
+      const testLine = currentLine + " " + words[i];
+      if (ctx.measureText(testLine).width < maxWidth) {
+        currentLine = testLine;
       } else {
-        segments = defaultSegments.slice();
-      }
-      if (segments.length !== lastSegmentCount) {
-        colors = generateColors(segments.length);
-        lastSegmentCount = segments.length;
-      }
-      startAngle = 0;
-      drawWheel();
-    });
-
-    // Navigation: Show selected section and hide others
-    function showSection(id) {
-      document.getElementById("gameSection").style.display = "none";
-      document.getElementById("terms").style.display = "none";
-      document.getElementById("privacy").style.display = "none";
-      document.getElementById(id).style.display = "block";
-      if (id === "gameSection") {
-        updateCanvasSize();
-        if (!hasSpun) { idleAnimationId = requestAnimationFrame(idleRotate); }
-      } else {
-        cancelAnimationFrame(idleAnimationId);
+        lines.push(currentLine);
+        currentLine = words[i];
       }
     }
-    
-    document.getElementById("navGame").addEventListener("click", function(e) {
-      e.preventDefault();
-      showSection("gameSection");
-    });
-    document.getElementById("navTerms").addEventListener("click", function(e) {
-      e.preventDefault();
-      showSection("terms");
-    });
-    document.getElementById("navPrivacy").addEventListener("click", function(e) {
-      e.preventDefault();
-      showSection("privacy");
-    });
-    
-    // Initialize: set canvas size, draw initial wheel, and start idle rotation (if not spun)
-    updateCanvasSize();
+    lines.push(currentLine);
+    return lines;
+  }
+
+  // Idle rotation
+  function idleRotate() {
+    if (hasSpun) return; // Stop if user has spun
+    startAngle += 0.005;
     drawWheel();
-    idleAnimationId = requestAnimationFrame(idleRotate);
-    showSection("gameSection");
-    
-    window.addEventListener("resize", updateCanvasSize);
-  </script>
+    idleReqId = requestAnimationFrame(idleRotate);
+  }
+
+  // Spin the wheel
+  function rotateWheel() {
+    spinTime += 30;
+    if (spinTime >= spinTimeTotal) {
+      stopRotateWheel();
+      return;
+    }
+    const spinAngle = easeOutQuart(spinTime, 0, spinAngleTotal, spinTimeTotal);
+    startAngle += (spinAngle * Math.PI) / 180;
+    drawWheel();
+    requestAnimationFrame(rotateWheel);
+  }
+
+  // Stop the wheel, show result
+  function stopRotateWheel() {
+    // pointer is at "top" => offset 90 deg
+    const degrees = (startAngle * 180) / Math.PI + 90;
+    const arcd = (arc * 180) / Math.PI;
+    const index = Math.floor((360 - (degrees % 360)) / arcd);
+    showResult(segments[index]);
+  }
+
+  // Show result in popup
+  function showResult(label) {
+    popupResult.textContent = `You won: ${label}!`;
+    popup.style.display = "flex";
+  }
+
+  // Spin button event
+  spinBtn.addEventListener("click", () => {
+    // Stop idle rotation
+    if (!hasSpun) {
+      hasSpun = true;
+      cancelAnimationFrame(idleReqId);
+    }
+    spinTime = 0;
+    spinTimeTotal = Math.random() * (MAX_SPIN_MS - MIN_SPIN_MS) + MIN_SPIN_MS;
+    spinAngleTotal = Math.random() * (MAX_ANGLE - MIN_ANGLE) + MIN_ANGLE;
+    rotateWheel();
+  });
+
+  // Keyboard shortcut: Ctrl+Enter => Spin
+  document.addEventListener("keydown", (e) => {
+    if (e.ctrlKey && e.key === "Enter") {
+      spinBtn.click();
+    }
+  });
+
+  // Close popup
+  closePopup.addEventListener("click", () => {
+    popup.style.display = "none";
+  });
+
+  // Generate colors, set up wheel
+  generateColors();
+  drawWheel();
+  idleReqId = requestAnimationFrame(idleRotate);
+
+</script>
 </body>
 </html>
