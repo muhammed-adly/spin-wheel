@@ -37,7 +37,7 @@
       background: #fff;
       padding: 20px;
       text-align: center;
-      box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+      box-shadow: 0 2px 4px rgba(0,0,0,0.1);
       width: 100%;
     }
     header h1 {
@@ -55,47 +55,37 @@
       margin: 20px 0;
       background: #fff;
       border-radius: 4px;
-      box-shadow: 0 2px 6px rgba(0, 0, 0, 0.1);
+      box-shadow: 0 2px 6px rgba(0,0,0,0.1);
     }
     /* Hide sections by default except the game */
     #terms, #privacy {
       display: none;
     }
-    /* Flex container for game area */
+
+    /****************************************
+     *  FLEX LAYOUT: WHEEL FIRST, TEXT SECOND
+     ****************************************/
     #gameContainer {
       display: flex;
-      flex-wrap: wrap;
-      justify-content: space-evenly;
+      flex-direction: column; /* Wheel on top, text below on mobile */
       align-items: center;
       width: 100%;
       padding: 20px;
+      gap: 20px; /* spacing between wheel and text */
     }
-    /* Text area styles */
-    #textInputContainer {
-      flex: 1 1 300px;
-      max-width: 400px;
-      padding: 10px;
+    /* On larger screens, switch to row layout */
+    @media (min-width: 768px) {
+      #gameContainer {
+        flex-direction: row;
+        justify-content: space-evenly;
+      }
     }
-    #textInputContainer textarea {
-      width: 100%;
-      height: 300px;
-      padding: 10px;
-      font-size: 16px;
-      border: 1px solid #ccc;
-      border-radius: 4px;
-      resize: vertical;
-      outline: none;
-      transition: border-color 0.3s;
-    }
-    #textInputContainer textarea:focus {
-      border-color: #8e44ad;
-    }
+
     /* Wheel container styles */
     #wheelContainer {
       position: relative;
-      flex: 1 1 300px;
       max-width: 500px;
-      padding: 10px;
+      width: 100%;
     }
     #wheelCanvas {
       box-shadow: 0 4px 10px rgba(0, 0, 0, 0.15);
@@ -116,6 +106,41 @@
       transform: translateX(-50%);
       z-index: 10;
     }
+
+    /* Text input container */
+    #textInputContainer {
+      max-width: 400px;
+      width: 100%;
+    }
+
+    /* Textarea defaults */
+    #textInputContainer textarea {
+      width: 100%;
+      padding: 10px;
+      font-size: 16px;
+      border: 1px solid #ccc;
+      border-radius: 4px;
+      resize: vertical;
+      outline: none;
+      transition: border-color 0.3s;
+    }
+    #textInputContainer textarea:focus {
+      border-color: #8e44ad;
+    }
+
+    /* Smaller textarea on narrow screens */
+    @media (max-width: 767px) {
+      #textInputContainer textarea {
+        height: 200px; /* smaller height on phones */
+      }
+    }
+    /* Larger default on bigger screens */
+    @media (min-width: 768px) {
+      #textInputContainer textarea {
+        height: 300px;
+      }
+    }
+
     /* Button styling */
     .btn {
       font-size: 16px;
@@ -137,6 +162,7 @@
       font-size: 0.9em;
       width: 100%;
     }
+
     /* Popup modal styles */
     .popup {
       display: none;
@@ -175,6 +201,11 @@
   <!-- Main Game Section (Visible by default) -->
   <section id="gameSection">
     <div id="gameContainer">
+      <!-- Wheel container -->
+      <div id="wheelContainer">
+        <div id="pointer"></div>
+        <canvas id="wheelCanvas"></canvas>
+      </div>
       <!-- Text input container -->
       <div id="textInputContainer">
         <h3>Enter one item per line:</h3>
@@ -186,11 +217,6 @@ Prize 5
 Prize 6
 Prize 7
 Prize 8</textarea>
-      </div>
-      <!-- Wheel container -->
-      <div id="wheelContainer">
-        <div id="pointer"></div>
-        <canvas id="wheelCanvas"></canvas>
       </div>
     </div>
     <button class="btn" id="spinButton">Spin!</button>
@@ -250,7 +276,7 @@ Prize 8</textarea>
     var defaultSegments = ["Prize 1", "Prize 2", "Prize 3", "Prize 4", "Prize 5", "Prize 6", "Prize 7", "Prize 8"];
     var segments = defaultSegments.slice();
 
-    // Generate vibrant colors based on the number of segments (fixed saturation/lightness)
+    // Generate vibrant colors based on number of segments
     var colors = generateColors(segments.length);
     var lastSegmentCount = segments.length; // update colors only if count changes
 
@@ -310,7 +336,9 @@ Prize 8</textarea>
       ctx.lineWidth = 2;
       ctx.strokeStyle = "white";
       ctx.font = "bold 16px 'Poppins', sans-serif";
+
       arc = Math.PI * 2 / segments.length;
+
       for (var i = 0; i < segments.length; i++) {
         var angle = startAngle + i * arc;
         ctx.fillStyle = colors[i];
@@ -319,11 +347,16 @@ Prize 8</textarea>
         ctx.arc(centerX, centerY, insideRadius, angle + arc, angle, true);
         ctx.fill();
         ctx.stroke();
+
+        // Draw the text
         ctx.save();
         ctx.fillStyle = "#fff";
-        ctx.translate(centerX + Math.cos(angle + arc/2) * textRadius,
-                      centerY + Math.sin(angle + arc/2) * textRadius);
+        ctx.translate(
+          centerX + Math.cos(angle + arc/2) * textRadius,
+          centerY + Math.sin(angle + arc/2) * textRadius
+        );
         ctx.rotate(angle + arc/2 + Math.PI/2);
+
         var text = segments[i];
         var maxWidth = arc * textRadius * 0.9;
         var lines = wrapText(ctx, text, maxWidth);
@@ -414,7 +447,6 @@ Prize 8</textarea>
       if(id === "gameSection"){
         updateCanvasSize();
         // Start idle rotation only if the game hasn't been spun yet.
-        // (After first spin, idle rotation is canceled.)
         if(spinTimeTotal === 0){
           idleAnimationId = requestAnimationFrame(idleRotate);
         }
