@@ -61,17 +61,14 @@
     #terms, #privacy {
       display: none;
     }
-
-    /****************************************
-     *  FLEX LAYOUT: WHEEL FIRST, TEXT SECOND
-     ****************************************/
+    /* Flex container for game area (wheel on top, text below on small screens) */
     #gameContainer {
       display: flex;
-      flex-direction: column; /* Wheel on top, text below on mobile */
+      flex-direction: column;
       align-items: center;
       width: 100%;
       padding: 20px;
-      gap: 20px; /* spacing between wheel and text */
+      gap: 20px;
     }
     /* On larger screens, switch to row layout */
     @media (min-width: 768px) {
@@ -80,7 +77,6 @@
         justify-content: space-evenly;
       }
     }
-
     /* Wheel container styles */
     #wheelContainer {
       position: relative;
@@ -88,7 +84,7 @@
       width: 100%;
     }
     #wheelCanvas {
-      box-shadow: 0 4px 10px rgba(0, 0, 0, 0.15);
+      box-shadow: 0 4px 10px rgba(0,0,0,0.15);
       border-radius: 50%;
       display: block;
       margin: 0 auto;
@@ -106,14 +102,12 @@
       transform: translateX(-50%);
       z-index: 10;
     }
-
     /* Text input container */
     #textInputContainer {
       max-width: 400px;
       width: 100%;
     }
-
-    /* Textarea defaults */
+    /* Textarea styles */
     #textInputContainer textarea {
       width: 100%;
       padding: 10px;
@@ -127,20 +121,17 @@
     #textInputContainer textarea:focus {
       border-color: #8e44ad;
     }
-
     /* Smaller textarea on narrow screens */
     @media (max-width: 767px) {
       #textInputContainer textarea {
-        height: 200px; /* smaller height on phones */
+        height: 200px;
       }
     }
-    /* Larger default on bigger screens */
     @media (min-width: 768px) {
       #textInputContainer textarea {
         height: 300px;
       }
     }
-
     /* Button styling */
     .btn {
       font-size: 16px;
@@ -162,7 +153,6 @@
       font-size: 0.9em;
       width: 100%;
     }
-
     /* Popup modal styles */
     .popup {
       display: none;
@@ -264,37 +254,36 @@ Prize 8</textarea>
   </footer>
 
   <script>
-    // Get DOM elements
+    // Global variables and DOM elements
     var canvas = document.getElementById("wheelCanvas");
     var ctx = canvas.getContext("2d");
     var namesInput = document.getElementById("namesInput");
     var popup = document.getElementById("popup");
     var popupResult = document.getElementById("popupResult");
     var closePopup = document.getElementById("closePopup");
-
-    // Default segments if textarea is empty
+    
     var defaultSegments = ["Prize 1", "Prize 2", "Prize 3", "Prize 4", "Prize 5", "Prize 6", "Prize 7", "Prize 8"];
     var segments = defaultSegments.slice();
-
-    // Generate vibrant colors based on number of segments
+    
     var colors = generateColors(segments.length);
     var lastSegmentCount = segments.length; // update colors only if count changes
-
+    
     var startAngle = 0;
     var arc = Math.PI * 2 / segments.length;
     var spinTime = 0;
     var spinTimeTotal = 0;
     var spinAngleTotal = 0;
     var idleAnimationId;
-
-    // Update canvas size responsively
+    var hasSpun = false; // flag to stop idle rotation after first spin
+    
+    // Responsive canvas size
     function updateCanvasSize() {
       var newSize = Math.min(window.innerWidth * 0.9, 500);
       canvas.width = newSize;
       canvas.height = newSize;
       drawWheel();
     }
-
+    
     // Generate colors using HSL
     function generateColors(n) {
       var arr = [];
@@ -304,7 +293,7 @@ Prize 8</textarea>
       }
       return arr;
     }
-
+    
     // Wrap text to fit within maxWidth
     function wrapText(context, text, maxWidth) {
       var words = text.split(" ");
@@ -323,8 +312,8 @@ Prize 8</textarea>
       lines.push(currentLine);
       return lines;
     }
-
-    // Draw the wheel with wrapped text for each segment
+    
+    // Draw the wheel with horizontally oriented text
     function drawWheel() {
       var canvasSize = canvas.width;
       var centerX = canvasSize / 2;
@@ -336,9 +325,9 @@ Prize 8</textarea>
       ctx.lineWidth = 2;
       ctx.strokeStyle = "white";
       ctx.font = "bold 16px 'Poppins', sans-serif";
-
+      
       arc = Math.PI * 2 / segments.length;
-
+      
       for (var i = 0; i < segments.length; i++) {
         var angle = startAngle + i * arc;
         ctx.fillStyle = colors[i];
@@ -347,16 +336,13 @@ Prize 8</textarea>
         ctx.arc(centerX, centerY, insideRadius, angle + arc, angle, true);
         ctx.fill();
         ctx.stroke();
-
-        // Draw the text
+        
+        // Draw horizontal text (no rotation)
         ctx.save();
         ctx.fillStyle = "#fff";
-        ctx.translate(
-          centerX + Math.cos(angle + arc/2) * textRadius,
-          centerY + Math.sin(angle + arc/2) * textRadius
-        );
-        ctx.rotate(angle + arc/2 + Math.PI/2);
-
+        ctx.translate(centerX + Math.cos(angle + arc/2) * textRadius,
+                      centerY + Math.sin(angle + arc/2) * textRadius);
+        // Do not rotate so text remains horizontal
         var text = segments[i];
         var maxWidth = arc * textRadius * 0.9;
         var lines = wrapText(ctx, text, maxWidth);
@@ -368,56 +354,58 @@ Prize 8</textarea>
         ctx.restore();
       }
     }
-
-    // Idle rotation: slowly rotate the wheel until spin is clicked
-    function idleRotate() {
-      startAngle += 0.005;
-      drawWheel();
-      idleAnimationId = requestAnimationFrame(idleRotate);
+    
+    // Easing function for a smoother deceleration (easeOutQuart)
+    function easeOutQuart(t, b, c, d) {
+      t /= d;
+      t--;
+      return -c * (t*t*t*t - 1) + b;
     }
-
-    // Spin the wheel using an ease-out cubic effect
+    
+    // Spin the wheel using the new easing function
     function rotateWheel() {
       spinTime += 30;
       if (spinTime >= spinTimeTotal) {
         stopRotateWheel();
         return;
       }
-      var t = spinTime, b = 0, c = spinAngleTotal, d = spinTimeTotal;
-      var spinAngle = c * (Math.pow(t/d - 1, 3) + 1); 
+      var spinAngle = easeOutQuart(spinTime, 0, spinAngleTotal, spinTimeTotal);
       startAngle += (spinAngle * Math.PI / 180);
       drawWheel();
       requestAnimationFrame(rotateWheel);
     }
-
-    // Stop spin, show result in popup, and do NOT resume idle rotation
+    
+    // Stop the spin, show result in a popup, and do NOT resume idle rotation
     function stopRotateWheel() {
       var degrees = startAngle * 180 / Math.PI + 90; // adjust for pointer position
       var arcd = arc * 180 / Math.PI;
       var index = Math.floor((360 - degrees % 360) / arcd);
       showPopup(segments[index]);
     }
-
+    
     // Show popup with celebration message
     function showPopup(result) {
       popupResult.innerHTML = "You won: " + result + "!";
       popup.style.display = "flex";
     }
-
+    
     // Close popup when close button is clicked
     closePopup.addEventListener("click", function() {
       popup.style.display = "none";
     });
-
-    // Spin button event: cancel idle rotation and spin the wheel once
+    
+    // Spin button event: cancel idle rotation, set flag, and spin the wheel once
     document.getElementById("spinButton").addEventListener("click", function() {
+      if (!hasSpun) {
+        hasSpun = true;
+      }
       cancelAnimationFrame(idleAnimationId);
       spinTime = 0;
-      spinTimeTotal = Math.random() * 3000 + 6000;
+      spinTimeTotal = Math.random() * 3000 + 6000; // 6-9 seconds
       spinAngleTotal = Math.random() * 1000 + 1500;
       rotateWheel();
     });
-
+    
     // Update segments in real time from textarea input
     namesInput.addEventListener("input", function() {
       var input = this.value;
@@ -437,24 +425,24 @@ Prize 8</textarea>
       startAngle = 0;
       drawWheel();
     });
-
+    
     // Navigation: Show selected section and hide others
     function showSection(id) {
       document.getElementById("gameSection").style.display = "none";
       document.getElementById("terms").style.display = "none";
       document.getElementById("privacy").style.display = "none";
       document.getElementById(id).style.display = "block";
-      if(id === "gameSection"){
+      if (id === "gameSection") {
         updateCanvasSize();
-        // Start idle rotation only if the game hasn't been spun yet.
-        if(spinTimeTotal === 0){
+        // Only start idle rotation if no spin has ever been performed
+        if (!hasSpun) {
           idleAnimationId = requestAnimationFrame(idleRotate);
         }
       } else {
         cancelAnimationFrame(idleAnimationId);
       }
     }
-
+    
     document.getElementById("navGame").addEventListener("click", function(e) {
       e.preventDefault();
       showSection("gameSection");
@@ -467,13 +455,20 @@ Prize 8</textarea>
       e.preventDefault();
       showSection("privacy");
     });
-
-    // Initialize: set canvas size, draw initial wheel, and start idle rotation
+    
+    // Idle rotation: slowly rotate the wheel until spin is clicked
+    function idleRotate() {
+      startAngle += 0.005;
+      drawWheel();
+      idleAnimationId = requestAnimationFrame(idleRotate);
+    }
+    
+    // Initialize: set canvas size, draw initial wheel, and start idle rotation (if not spun)
     updateCanvasSize();
     drawWheel();
     idleAnimationId = requestAnimationFrame(idleRotate);
     showSection("gameSection");
-
+    
     window.addEventListener("resize", updateCanvasSize);
   </script>
 </body>
