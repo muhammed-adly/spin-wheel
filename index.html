@@ -48,22 +48,12 @@
       width: 100%;
       max-width: 80vmin;
     }
-    #pointer {
-      position: absolute;
-      top: -60px;
-      left: 50%;
-      transform: translateX(-50%);
-      width: 50px;
-      height: 50px;
-      background: url('https://spinthewheel.app/static/media/pointer.8f5f0078.svg') no-repeat center center;
-      background-size: contain;
-      z-index: 2;
-    }
     canvas {
       width: 100%;
       height: auto;
       border-radius: 50%;
       box-shadow: 0 4px 20px rgba(0,0,0,0.15);
+      cursor: pointer;
     }
     #textInputContainer {
       width: 100%;
@@ -89,23 +79,26 @@
     textarea:focus {
       border-color: #0b7dda;
     }
+    #historyTitle {
+      margin-top: 20px;
+      font-size: 16px;
+      font-weight: bold;
+      color: #2196f3;
+      font-family: 'Quicksand', sans-serif;
+    }
     #history {
       display: none;
-      margin-top: 20px;
-      font-size: 14px;
-      color: #444;
+      margin-top: 10px;
+      font-size: 16px;
+      color: #333;
+      text-align: left;
+      white-space: pre-line;
       background: #f9f9f9;
       padding: 10px;
       border: 1px solid #ccc;
       border-radius: 6px;
       max-height: 150px;
       overflow-y: auto;
-    }
-    #historyTitle {
-      margin-top: 20px;
-      font-size: 16px;
-      font-weight: bold;
-      color: #2196f3;
       font-family: 'Quicksand', sans-serif;
     }
     .popup {
@@ -151,7 +144,6 @@
   <section id="game">
     <div id="gameContainer">
       <div id="wheelContainer">
-        <div id="pointer"></div>
         <canvas id="wheelCanvas"></canvas>
       </div>
       <div id="textInputContainer">
@@ -212,10 +204,10 @@ Prize 8</textarea>
     }
 
     function generateColors(n) {
-      const palette = ['#f44336', '#e91e63', '#9c27b0', '#3f51b5', '#2196f3', '#009688', '#4caf50', '#ff9800', '#ff5722'];
+      const pastel = ['#ffcccc', '#ffd9e6', '#e0ccff', '#ccf5ff', '#d9ffe0', '#fff0b3', '#ffd699'];
       const arr = [];
       for (let i = 0; i < n; i++) {
-        arr.push(palette[i % palette.length]);
+        arr.push(pastel[i % pastel.length]);
       }
       return arr;
     }
@@ -237,15 +229,23 @@ Prize 8</textarea>
         ctx.translate(radius, radius);
         ctx.rotate(angle + arc / 2);
         ctx.textAlign = "right";
-        ctx.fillStyle = "#fff";
-        ctx.font = `${Math.floor(radius / 10)}px Quicksand`;
+        ctx.fillStyle = "#333";
+        ctx.font = `${Math.floor(radius / 12)}px Quicksand`;
         ctx.fillText(label, radius - 20, 10);
         ctx.restore();
       });
 
+      // central clickable circle (spin)
       ctx.beginPath();
       ctx.arc(radius, radius, radius * 0.12, 0, Math.PI * 2);
       ctx.fillStyle = "#000";
+      ctx.fill();
+      ctx.beginPath();
+      ctx.moveTo(radius, radius * 0.12);
+      ctx.lineTo(radius - 10, radius * 0.06);
+      ctx.lineTo(radius + 10, radius * 0.06);
+      ctx.closePath();
+      ctx.fillStyle = "#fff";
       ctx.fill();
       ctx.fillStyle = "#fff";
       ctx.font = `bold ${Math.floor(radius * 0.08)}px Quicksand`;
@@ -282,7 +282,7 @@ Prize 8</textarea>
       namesInput.disabled = false;
       history.unshift(result);
       historyBox.style.display = "block";
-      historyBox.innerHTML = history.slice(0, 10).map(h => `- ${h}`).join('<br>');
+      historyBox.innerText = history.slice(0, 10).join('\n');
     }
 
     function spin() {
