@@ -2,126 +2,125 @@
 <html lang="en">
 <head>
   <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>Spin the Wheel Game</title>
-  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;700&display=swap" rel="stylesheet" />
+  <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@400;700&display=swap" rel="stylesheet">
   <style>
-    /* Reset and global styles */
-    * { box-sizing: border-box; margin: 0; padding: 0; }
-    html, body { height: 100%; width: 100%; }
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+    }
     body {
-      font-family: 'Poppins', sans-serif;
-      background: #fafafa;
+      font-family: 'Roboto', sans-serif;
+      background: #ffffff;
       color: #333;
-      line-height: 1.6;
       text-align: center;
       padding: 20px;
     }
-    a { color: #8e44ad; text-decoration: none; margin: 0 10px; cursor: pointer; }
-    a:hover { text-decoration: underline; }
-    header, footer {
-      background: #fff; padding: 20px; text-align: center;
-      box-shadow: 0 2px 4px rgba(0,0,0,0.1); width: 100%;
+    header {
+      padding: 20px;
     }
-    header h1 { font-size: 2.8em; color: #8e44ad; margin-bottom: 10px; }
-    header nav a { font-size: 1.1em; margin: 0 15px; }
+    header h1 {
+      font-size: 2.5em;
+      color: #2196f3;
+      font-weight: bold;
+    }
     section {
-      width: 100%; padding: 20px; margin: 20px 0;
-      background: #fff; border-radius: 4px;
-      box-shadow: 0 2px 6px rgba(0,0,0,0.1);
+      margin: 20px auto;
+      max-width: 1000px;
     }
-    /* Hide sections by default except the game */
-    #terms, #privacy { display: none; }
-    /* Flex container for game area */
     #gameContainer {
-      display: flex; flex-direction: column;
-      align-items: center; width: 100%; padding: 20px; gap: 20px;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 30px;
     }
-    /* On larger screens, switch to row layout */
     @media (min-width: 768px) {
-      #gameContainer { flex-direction: row; justify-content: space-evenly; }
+      #gameContainer {
+        flex-direction: row;
+        justify-content: center;
+      }
     }
-    /* Wheel container styles */
     #wheelContainer {
-      position: relative; max-width: 500px; width: 100%;
+      position: relative;
+      max-width: 400px;
+      width: 100%;
     }
-    #wheelCanvas {
-      box-shadow: 0 4px 10px rgba(0,0,0,0.15);
-      border-radius: 50%; display: block; margin: 0 auto;
-    }
-    /* Pointer styling: placed above the circle, pointing down */
     #pointer {
-      width: 0; height: 0;
-      border-left: 20px solid transparent;
-      border-right: 20px solid transparent;
-      border-top: 30px solid #333;
-      position: absolute; top: -30px; left: 50%;
+      position: absolute;
+      top: -60px;
+      left: 50%;
       transform: translateX(-50%);
-      z-index: 10;
+      width: 50px;
+      height: 50px;
+      background: url('https://spinthewheel.app/static/media/pointer.8f5f0078.svg') no-repeat center center;
+      background-size: contain;
+      z-index: 2;
     }
-    /* Text input container */
-    #textInputContainer { max-width: 400px; width: 100%; }
-    /* Textarea styles */
-    #textInputContainer textarea {
-      width: 100%; padding: 10px; font-size: 16px;
-      border: 1px solid #ccc; border-radius: 4px; resize: vertical; outline: none;
+    canvas {
+      width: 100%;
+      height: auto;
+      border-radius: 50%;
+      box-shadow: 0 0 10px rgba(0,0,0,0.1);
+    }
+    #textInputContainer {
+      width: 100%;
+      max-width: 300px;
+    }
+    textarea {
+      width: 100%;
+      height: 300px;
+      padding: 10px;
+      font-size: 16px;
+      border: 2px solid #2196f3;
+      border-radius: 6px;
+      outline: none;
       transition: border-color 0.3s;
     }
-    #textInputContainer textarea:focus { border-color: #8e44ad; }
-    @media (max-width: 767px) {
-      #textInputContainer textarea { height: 200px; }
+    textarea:focus {
+      border-color: #0b7dda;
     }
-    @media (min-width: 768px) {
-      #textInputContainer textarea { height: 300px; }
-    }
-    /* Button styling */
-    .btn {
-      font-size: 16px; padding: 10px 20px; cursor: pointer;
-      background: linear-gradient(45deg, #8e44ad, #3498db);
-      border: none; border-radius: 25px; color: #fff;
-      transition: background 0.3s, transform 0.2s;
-      margin: 20px auto; display: block;
-    }
-    .btn:hover {
-      background: linear-gradient(45deg, #732d91, #2980b9);
-      transform: scale(1.05);
-    }
-    footer { font-size: 0.9em; width: 100%; }
-    /* Popup modal styles */
     .popup {
-      display: none; position: fixed; top: 0; left: 0;
+      display: none;
+      position: fixed;
+      top: 0; left: 0;
       width: 100%; height: 100%;
-      background: rgba(0,0,0,0.5);
-      justify-content: center; align-items: center;
+      background: rgba(0,0,0,0.6);
+      justify-content: center;
+      align-items: center;
       z-index: 1000;
     }
     .popup-content {
-      background: #fff; padding: 30px; border-radius: 8px;
-      box-shadow: 0 2px 10px rgba(0,0,0,0.3);
-      text-align: center; max-width: 90%; margin: auto;
+      background: #fff;
+      padding: 30px;
+      border-radius: 10px;
+      text-align: center;
+      max-width: 90%;
+    }
+    .popup-content button {
+      margin-top: 20px;
+      padding: 10px 20px;
+      border: none;
+      background: #2196f3;
+      color: white;
+      border-radius: 5px;
+      font-size: 16px;
+      cursor: pointer;
     }
   </style>
 </head>
 <body>
-  <!-- Header with Title Above Navigation -->
   <header>
-    <h1>Spin the Wheel Game</h1>
-    <nav>
-      <a id="navGame" href="#gameSection">Home</a>
-      <a id="navTerms" href="#terms">Terms &amp; Conditions</a>
-      <a id="navPrivacy" href="#privacy">Privacy Policy</a>
-    </nav>
+    <h1>Spin the Wheel</h1>
   </header>
 
-  <!-- Main Game Section (Visible by default) -->
-  <section id="gameSection">
+  <section id="game">
     <div id="gameContainer">
-      <!-- Wheel container -->
       <div id="wheelContainer">
         <div id="pointer"></div>
-        <canvas id="wheelCanvas"></canvas>
+        <canvas id="wheelCanvas" width="400" height="400"></canvas>
       </div>
-      <!-- Text input container -->
       <div id="textInputContainer">
         <h3>Enter one item per line:</h3>
         <textarea id="namesInput">Prize 1
@@ -134,269 +133,120 @@ Prize 7
 Prize 8</textarea>
       </div>
     </div>
-    <button class="btn" id="spinButton">Spin!</button>
   </section>
 
-  <!-- Terms & Conditions Section (Collapsed by default) -->
-  <section id="terms">
-    <h2>Terms &amp; Conditions</h2>
-    <p>
-      These terms and conditions outline the rules and regulations for the use of our Spin the Wheel Game website.
-      By accessing this website, you accept these terms and conditions in full. If you disagree with these terms
-      and conditions, please do not use our website.
-    </p>
-    <p>
-      The content of this website is for your general information and use only. We reserve the right to make changes
-      at any time without notice.
-    </p>
-  </section>
-
-  <!-- Privacy Policy Section (Collapsed by default) -->
-  <section id="privacy">
-    <h2>Privacy Policy</h2>
-    <p>
-      We are committed to protecting your privacy. This privacy policy explains how we collect, use, disclose, and safeguard
-      your information when you visit our website.
-    </p>
-    <p>
-      By using our website, you consent to our privacy policy. We do not share your personal information with third parties
-      without your consent except as required by law.
-    </p>
-  </section>
-
-  <!-- Popup Modal for Celebration -->
-  <div id="popup" class="popup">
+  <div class="popup" id="popup">
     <div class="popup-content">
       <h2>Congratulations!</h2>
       <p id="popupResult"></p>
-      <button id="closePopup" class="btn">Close</button>
+      <button onclick="document.getElementById('popup').style.display='none'">Close</button>
     </div>
   </div>
 
-  <!-- Footer -->
-  <footer>
-    &copy; 2025 Spin the Wheel Game. All rights reserved.
-  </footer>
-
   <script>
-    // Global variables and DOM elements
-    var canvas = document.getElementById("wheelCanvas");
-    var ctx = canvas.getContext("2d");
-    var namesInput = document.getElementById("namesInput");
-    var popup = document.getElementById("popup");
-    var popupResult = document.getElementById("popupResult");
-    var closePopup = document.getElementById("closePopup");
+    const canvas = document.getElementById("wheelCanvas");
+    const ctx = canvas.getContext("2d");
+    const namesInput = document.getElementById("namesInput");
+    const popup = document.getElementById("popup");
+    const popupResult = document.getElementById("popupResult");
 
-    var defaultSegments = ["Prize 1", "Prize 2", "Prize 3", "Prize 4", "Prize 5", "Prize 6", "Prize 7", "Prize 8"];
-    var segments = defaultSegments.slice();
+    let segments = namesInput.value.trim().split("\n").filter(Boolean);
+    let colors = generateColors(segments.length);
+    let startAngle = 0;
+    let arc = Math.PI * 2 / segments.length;
+    let spinTime = 0;
+    let spinTimeTotal = 0;
+    let spinAngleTotal = 0;
+    let spinning = false;
 
-    var colors = generateColors(segments.length);
-    var lastSegmentCount = segments.length; // update colors only if count changes
-
-    var startAngle = 0;
-    var arc = Math.PI * 2 / segments.length;
-    var spinTime = 0;
-    var spinTimeTotal = 0;
-    var spinAngleTotal = 0;
-    var idleAnimationId;
-    var hasSpun = false; // flag to stop idle rotation after first spin
-
-    // Update canvas size responsively
-    function updateCanvasSize() {
-      var newSize = Math.min(window.innerWidth * 0.9, 500);
-      canvas.width = newSize;
-      canvas.height = newSize;
-      drawWheel();
-    }
-
-    // Generate colors using HSL
     function generateColors(n) {
-      var arr = [];
-      for (var i = 0; i < n; i++) {
-        var hue = Math.floor(360 * i / n);
-        arr.push("hsl(" + hue + ", 70%, 50%)");
+      const palette = ['#f44336', '#e91e63', '#9c27b0', '#3f51b5', '#2196f3', '#009688', '#4caf50', '#ff9800', '#ff5722'];
+      const arr = [];
+      for (let i = 0; i < n; i++) {
+        arr.push(palette[i % palette.length]);
       }
       return arr;
     }
 
-    // Wrap text to fit within maxWidth
-    function wrapText(context, text, maxWidth) {
-      var words = text.split(" ");
-      var lines = [];
-      var currentLine = words[0];
-      for (var i = 1; i < words.length; i++) {
-        var word = words[i];
-        var width = context.measureText(currentLine + " " + word).width;
-        if (width < maxWidth) {
-          currentLine += " " + word;
-        } else {
-          lines.push(currentLine);
-          currentLine = word;
-        }
-      }
-      lines.push(currentLine);
-      return lines;
-    }
-
-    // Draw the wheel with labels drawn with a fixed orientation relative to the circle
     function drawWheel() {
-      var canvasSize = canvas.width;
-      var centerX = canvasSize / 2;
-      var centerY = canvasSize / 2;
-      var outsideRadius = centerX - 20; // 20px padding
-      var textRadius = outsideRadius - 40;
-      var insideRadius = canvasSize * 0.06; // proportionate inner circle
+      const radius = canvas.width / 2;
       ctx.clearRect(0, 0, canvas.width, canvas.height);
-      ctx.lineWidth = 2;
-      ctx.strokeStyle = "white";
-      ctx.font = "bold 16px 'Poppins', sans-serif";
-      
       arc = Math.PI * 2 / segments.length;
-      
-      for (var i = 0; i < segments.length; i++) {
-        var segStart = startAngle + i * arc;
-        var currentMidAngle = segStart + arc/2;
-        // Draw the segment shape
-        ctx.fillStyle = colors[i];
+      segments.forEach((label, i) => {
+        const angle = startAngle + i * arc;
         ctx.beginPath();
-        ctx.arc(centerX, centerY, outsideRadius, segStart, segStart + arc, false);
-        ctx.arc(centerX, centerY, insideRadius, segStart + arc, segStart, true);
+        ctx.fillStyle = colors[i];
+        ctx.moveTo(radius, radius);
+        ctx.arc(radius, radius, radius - 10, angle, angle + arc);
+        ctx.lineTo(radius, radius);
         ctx.fill();
-        ctx.stroke();
-        
-        // Compute the current position for the label (this moves with the wheel)
-        var posX = centerX + Math.cos(currentMidAngle) * textRadius;
-        var posY = centerY + Math.sin(currentMidAngle) * textRadius;
-        
-        // Compute a fixed label orientation independent of startAngle.
-        // For segment i, the fixed mid-angle is: fixedMid = i*arc + arc/2.
-        // To have the text point toward the center, its baseline should be rotated by (fixedMid - π/2).
-        var fixedMidAngle = i * arc + arc/2;
-        var textRotation = fixedMidAngle - Math.PI/2;
-        
+
         ctx.save();
+        ctx.translate(radius, radius);
+        ctx.rotate(angle + arc / 2);
+        ctx.textAlign = "right";
         ctx.fillStyle = "#fff";
-        ctx.translate(posX, posY);
-        ctx.rotate(textRotation);
-        var text = segments[i];
-        var maxWidth = arc * textRadius * 0.9;
-        var lines = wrapText(ctx, text, maxWidth);
-        var lineHeight = 18;
-        var offset = -((lines.length - 1) / 2) * lineHeight;
-        for (var j = 0; j < lines.length; j++) {
-          ctx.fillText(lines[j], -ctx.measureText(lines[j]).width/2, offset + j * lineHeight);
-        }
+        ctx.font = "bold 16px Roboto";
+        ctx.fillText(label, radius - 20, 10);
         ctx.restore();
-      }
+      });
+
+      // Draw center spin button
+      ctx.beginPath();
+      ctx.arc(radius, radius, 40, 0, Math.PI * 2);
+      ctx.fillStyle = "#ffffff";
+      ctx.fill();
+      ctx.fillStyle = "#2196f3";
+      ctx.font = "bold 14px Roboto";
+      ctx.textAlign = "center";
+      ctx.fillText("SPIN", radius, radius + 5);
     }
 
-    // Easing function (easeOutQuart) for smoother deceleration
     function easeOutQuart(t, b, c, d) {
       t /= d;
       t--;
       return -c * (t*t*t*t - 1) + b;
     }
 
-    // Spin the wheel using the easing function
     function rotateWheel() {
       spinTime += 30;
       if (spinTime >= spinTimeTotal) {
         stopRotateWheel();
         return;
       }
-      var spinAngle = easeOutQuart(spinTime, 0, spinAngleTotal, spinTimeTotal);
+      const spinAngle = easeOutQuart(spinTime, 0, spinAngleTotal, spinTimeTotal);
       startAngle += (spinAngle * Math.PI / 180);
       drawWheel();
       requestAnimationFrame(rotateWheel);
     }
 
-    // Stop the spin, show the result in a popup, and do not resume idle rotation
     function stopRotateWheel() {
-      var degrees = startAngle * 180 / Math.PI + 90; // adjust for pointer position if any
-      var arcd = arc * 180 / Math.PI;
-      var index = Math.floor((360 - degrees % 360) / arcd);
-      showPopup(segments[index]);
-    }
-
-    // Show popup with celebration message
-    function showPopup(result) {
-      popupResult.innerHTML = "You won: " + result + "!";
+      const degrees = startAngle * 180 / Math.PI + 90;
+      const arcd = arc * 180 / Math.PI;
+      const index = Math.floor((360 - degrees % 360) / arcd) % segments.length;
+      popupResult.textContent = `You won: ${segments[index]}!`;
       popup.style.display = "flex";
+      spinning = false;
     }
 
-    // Close popup when close button is clicked
-    closePopup.addEventListener("click", function() {
-      popup.style.display = "none";
-    });
-
-    // Idle rotation: slowly rotate the wheel until spin is clicked
-    function idleRotate() {
-      if (hasSpun) return; // Stop idle rotation after first spin
-      startAngle += 0.005;
-      drawWheel();
-      idleAnimationId = requestAnimationFrame(idleRotate);
-    }
-
-    // Spin button event: cancel idle rotation, mark spin as done, and spin the wheel once
-    document.getElementById("spinButton").addEventListener("click", function() {
-      if (!hasSpun) { hasSpun = true; }
-      cancelAnimationFrame(idleAnimationId);
+    function spin() {
+      if (spinning) return;
+      spinning = true;
       spinTime = 0;
-      spinTimeTotal = Math.random() * 3000 + 6000; // 6-9 seconds
+      spinTimeTotal = Math.random() * 3000 + 6000;
       spinAngleTotal = Math.random() * 1000 + 1500;
       rotateWheel();
-    });
+    }
 
-    // Update segments in real time from textarea input
-    namesInput.addEventListener("input", function() {
-      var input = this.value;
-      if (input.trim() !== "") {
-        segments = input.split("\n").map(function(line) { return line.trim(); }).filter(function(line) { return line !== ""; });
-      } else {
-        segments = defaultSegments.slice();
-      }
-      if (segments.length !== lastSegmentCount) {
-        colors = generateColors(segments.length);
-        lastSegmentCount = segments.length;
-      }
+    canvas.addEventListener("click", spin);
+    namesInput.addEventListener("input", () => {
+      segments = namesInput.value.trim().split("\n").filter(Boolean);
+      colors = generateColors(segments.length);
       startAngle = 0;
       drawWheel();
     });
 
-    // Navigation: Show selected section and hide others
-    function showSection(id) {
-      document.getElementById("gameSection").style.display = "none";
-      document.getElementById("terms").style.display = "none";
-      document.getElementById("privacy").style.display = "none";
-      document.getElementById(id).style.display = "block";
-      if (id === "gameSection") {
-        updateCanvasSize();
-        if (!hasSpun) { idleAnimationId = requestAnimationFrame(idleRotate); }
-      } else {
-        cancelAnimationFrame(idleAnimationId);
-      }
-    }
-    
-    document.getElementById("navGame").addEventListener("click", function(e) {
-      e.preventDefault();
-      showSection("gameSection");
-    });
-    document.getElementById("navTerms").addEventListener("click", function(e) {
-      e.preventDefault();
-      showSection("terms");
-    });
-    document.getElementById("navPrivacy").addEventListener("click", function(e) {
-      e.preventDefault();
-      showSection("privacy");
-    });
-    
-    // Initialize: set canvas size, draw initial wheel, and start idle rotation (if not spun)
-    updateCanvasSize();
     drawWheel();
-    idleAnimationId = requestAnimationFrame(idleRotate);
-    showSection("gameSection");
-    
-    window.addEventListener("resize", updateCanvasSize);
   </script>
 </body>
 </html>
