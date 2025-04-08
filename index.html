@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Spin the Wheel Game</title>
+  <title>Wheel of Luck</title>
   <link href="https://fonts.googleapis.com/css2?family=Quicksand:wght@400;700&display=swap" rel="stylesheet">
   <style>
     * {
@@ -22,10 +22,10 @@
       padding: 20px;
     }
     header h1 {
-      font-size: 2.5em;
-      color: #2196f3;
+      font-size: 2.8em;
+      color: #2e7d32;
       font-weight: bold;
-      text-shadow: 1px 1px 2px #ccc;
+      text-shadow: 2px 2px 3px rgba(0,0,0,0.1);
     }
     section {
       margin: 20px auto;
@@ -64,7 +64,7 @@
       height: 300px;
       padding: 10px;
       font-size: 16px;
-      border: 2px solid #2196f3;
+      border: 2px solid #2e7d32;
       border-radius: 6px;
       outline: none;
       transition: border-color 0.3s;
@@ -77,13 +77,13 @@
       cursor: not-allowed;
     }
     textarea:focus {
-      border-color: #0b7dda;
+      border-color: #1b5e20;
     }
     #historyTitle {
       margin-top: 20px;
       font-size: 16px;
       font-weight: bold;
-      color: #2196f3;
+      color: #2e7d32;
       font-family: 'Quicksand', sans-serif;
     }
     #history {
@@ -123,7 +123,7 @@
       margin-top: 20px;
       padding: 10px 20px;
       border: none;
-      background: #2196f3;
+      background: #2e7d32;
       color: white;
       border-radius: 5px;
       font-size: 16px;
@@ -138,7 +138,7 @@
 </head>
 <body>
   <header>
-    <h1>Spin the Wheel</h1>
+    <h1>Wheel of Luck</h1>
   </header>
 
   <section id="game">
@@ -171,7 +171,7 @@ Prize 8</textarea>
   </div>
 
   <footer>
-    &copy; 2025 Spin the Wheel. All rights reserved.
+    &copy; 2025 Wheel of Luck. All rights reserved.
   </footer>
 
   <audio id="tickSound" src="https://www.myinstants.com/media/sounds/click-button.mp3"></audio>
@@ -204,7 +204,7 @@ Prize 8</textarea>
     }
 
     function generateColors(n) {
-      const pastel = ['#ffcccc', '#ffd9e6', '#e0ccff', '#ccf5ff', '#d9ffe0', '#fff0b3', '#ffd699'];
+      const pastel = ['#ffe0e0', '#fce5cd', '#d9ead3', '#d0e0e3', '#e6f3ff', '#f4cccc', '#e0d9ff'];
       const arr = [];
       for (let i = 0; i < n; i++) {
         arr.push(pastel[i % pastel.length]);
@@ -238,24 +238,33 @@ Prize 8</textarea>
       // central clickable circle (spin)
       ctx.beginPath();
       ctx.arc(radius, radius, radius * 0.12, 0, Math.PI * 2);
-      ctx.fillStyle = "#000";
+      ctx.fillStyle = "#2e7d32";
+      ctx.shadowColor = "rgba(0, 0, 0, 0.2)";
+      ctx.shadowBlur = 10;
       ctx.fill();
+
+      // pointer above spin button (white triangle with shadow)
       ctx.beginPath();
       ctx.moveTo(radius, radius * 0.12);
-      ctx.lineTo(radius - 10, radius * 0.06);
-      ctx.lineTo(radius + 10, radius * 0.06);
+      ctx.lineTo(radius - 12, radius * 0.03);
+      ctx.lineTo(radius + 12, radius * 0.03);
       ctx.closePath();
       ctx.fillStyle = "#fff";
+      ctx.shadowColor = "rgba(0, 0, 0, 0.25)";
+      ctx.shadowBlur = 5;
       ctx.fill();
+
+      ctx.shadowBlur = 0;
       ctx.fillStyle = "#fff";
       ctx.font = `bold ${Math.floor(radius * 0.08)}px Quicksand`;
       ctx.textAlign = "center";
       ctx.fillText("SPIN", radius, radius + radius * 0.03);
     }
 
-    function easeOutQuart(t, b, c, d) {
-      t /= d; t--;
-      return -c * (t*t*t*t - 1) + b;
+    function easeOutCubic(t, b, c, d) {
+      t /= d;
+      t--;
+      return c * (t * t * t + 1) + b;
     }
 
     function rotateWheel() {
@@ -265,7 +274,7 @@ Prize 8</textarea>
         return;
       }
       if (spinTime % 150 === 0) tickSound.play();
-      const spinAngle = easeOutQuart(spinTime, 0, spinAngleTotal, spinTimeTotal);
+      const spinAngle = easeOutCubic(spinTime, 0, spinAngleTotal, spinTimeTotal);
       startAngle += (spinAngle * Math.PI / 180);
       drawWheel();
       requestAnimationFrame(rotateWheel);
