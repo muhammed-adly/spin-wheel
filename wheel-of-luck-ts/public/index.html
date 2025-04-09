@@ -5,7 +5,7 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>Wheel of Luck</title>
   <link rel="stylesheet" href="style.css" />
-  <link href="https://fonts.googleapis.com/css2?family=Quicksand:wght@400;700&display=swap" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css2?family=Quicksand:wght@400;700&display=swap" rel="stylesheet" />
 </head>
 <body>
   <header>
@@ -17,6 +17,7 @@
       <div id="wheelContainer">
         <canvas id="wheelCanvas"></canvas>
       </div>
+
       <div id="textInputContainer">
         <h3>Enter one item per line:</h3>
         <textarea id="namesInput">Prize 1
@@ -27,8 +28,12 @@ Prize 5
 Prize 6
 Prize 7
 Prize 8</textarea>
-        <div id="historyTitle">Previous Spins:</div>
-        <div id="history"></div>
+
+        <!-- prevent layout jump with fixed history area -->
+        <div id="historyWrapper">
+          <div id="historyTitle">Previous Spins:</div>
+          <div id="history"></div>
+        </div>
       </div>
     </div>
   </section>

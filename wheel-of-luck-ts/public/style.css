@@ -77,26 +77,34 @@
     cursor: not-allowed;
   }
   
-  #historyTitle {
+  /* Wrapper to keep history space reserved and avoid jumps */
+  #historyWrapper {
     margin-top: 20px;
+    display: flex;
+    flex-direction: column;
+    min-height: 180px; /* enough to hold 5-10 results */
+  }
+  
+  #historyTitle {
     font-size: 16px;
     font-weight: bold;
     color: #2196f3;
+    text-align: left;
   }
   
   #history {
     display: none;
     margin-top: 10px;
     font-size: 16px;
+    font-weight: bold;
     color: #333;
-    white-space: pre-line;
     background: #f9f9f9;
     padding: 10px;
     border: 1px solid #ccc;
     border-radius: 6px;
-    max-height: 300px;
     overflow-y: auto;
-    margin-top: 10px;
+    white-space: pre-line;
+    text-align: left;
     font-family: 'Quicksand', sans-serif;
   }
   

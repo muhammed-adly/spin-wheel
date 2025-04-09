@@ -141,4 +141,9 @@ namesInput.addEventListener("input", () => {
 });
 
 window.addEventListener("resize", resizeCanvas);
-resizeCanvas();
+
+// Wait until font loads then draw
+document.fonts.ready.then(() => {
+  resizeCanvas();
+  drawWheel();
+});
