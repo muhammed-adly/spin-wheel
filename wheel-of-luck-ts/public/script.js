@@ -1,3 +1,4 @@
+
 let canvas = document.getElementById("wheelCanvas");
 let ctx = canvas.getContext("2d");
 let namesInput = document.getElementById("namesInput");
@@ -5,9 +6,9 @@ let popup = document.getElementById("popup");
 let popupResult = document.getElementById("popupResult");
 let historyBox = document.getElementById("history");
 let segments = namesInput.value.trim().split("\n").filter(Boolean);
-let history = [], colors = [], idleTimer;
-let startAngle = 0, arc, spinTime = 0, spinTimeTotal = 0, spinAngleTotal = 0;
-let spinning = false;
+let history = [], colors = [];
+let startAngle = 0, arc = 0, spinTime = 0, spinTimeTotal = 0, spinAngleTotal = 0;
+let spinning = false, idleTimer;
 
 const tickSound = new Howl({ src: ['sounds/tick.mp3'] });
 
@@ -23,9 +24,13 @@ function resizeCanvas() {
 }
 
 function drawWheel() {
+  segments = namesInput.value.trim().split("\n").filter(Boolean);
+  if (segments.length === 0) return;
+  colors = generateColors(segments.length);
+  arc = Math.PI * 2 / segments.length;
   const radius = canvas.width / 2;
   ctx.clearRect(0, 0, canvas.width, canvas.height);
-  arc = Math.PI * 2 / segments.length;
+
   segments.forEach((label, i) => {
     const angle = startAngle + i * arc;
     ctx.beginPath();
@@ -81,7 +86,10 @@ function easeOutCubic(t, b, c, d) {
 
 function rotateWheel() {
   spinTime += 30;
-  if (spinTime >= spinTimeTotal) return stopRotateWheel();
+  if (spinTime >= spinTimeTotal) {
+    stopRotateWheel();
+    return;
+  }
   if (spinTime % 150 === 0) tickSound.play();
   const spinAngle = easeOutCubic(spinTime, 0, spinAngleTotal, spinTimeTotal);
   startAngle += (spinAngle * Math.PI / 180);
@@ -100,7 +108,7 @@ function stopRotateWheel() {
   namesInput.disabled = false;
   history.unshift(result);
   historyBox.style.display = "block";
-  historyBox.innerText = history.slice(0, 10).join('\\n');
+  historyBox.innerText = history.slice(0, 10).join('\n');
 }
 
 function spin() {
@@ -124,9 +132,6 @@ function resetIdleTimer() {
 
 canvas.addEventListener("click", spin);
 namesInput.addEventListener("input", () => {
-  segments = namesInput.value.trim().split("\\n").filter(Boolean);
-  colors = generateColors(segments.length);
-  startAngle = 0;
   drawWheel();
 });
 window.addEventListener("resize", resizeCanvas);
