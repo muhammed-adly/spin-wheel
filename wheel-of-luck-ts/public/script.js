@@ -15,8 +15,9 @@ let spinAngleTotal = 0;
 let spinning = false;
 let history = [];
 
+
 function resizeCanvas() {
-  const size = Math.min(window.innerWidth * 0.9, window.innerHeight * 0.9);
+  const size = Math.min(window.innerWidth * 0.7, window.innerHeight * 0.7);
   canvas.width = size;
   canvas.height = size;
   drawWheel();
