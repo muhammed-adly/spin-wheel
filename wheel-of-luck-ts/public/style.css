@@ -1,98 +1,121 @@
-* { box-sizing: border-box; margin: 0; padding: 0; }
-body {
-  font-family: 'Quicksand', sans-serif;
-  background: linear-gradient(135deg, #e6f3ff, #ffffff);
-  color: #333;
-  text-align: center;
-  padding: 20px;
-}
-header h1 {
-  font-size: 2.8em;
-  color: #2196f3;
-  text-shadow: 2px 2px 3px rgba(0,0,0,0.1);
-}
-#gameContainer {
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  gap: 30px;
-}
-@media (min-width: 768px) {
-  #gameContainer {
-    flex-direction: row;
-    justify-content: center;
+* {
+    box-sizing: border-box;
+    margin: 0;
+    padding: 0;
   }
-}
-#wheelContainer {
-  position: relative;
-  width: 100%;
-  max-width: 80vmin;
-}
-canvas {
-  width: 100%;
-  height: auto;
-  border-radius: 50%;
-  box-shadow: 0 4px 20px rgba(0,0,0,0.15);
-  cursor: pointer;
-}
-#textInputContainer {
-  width: 100%;
-  max-width: 300px;
-  min-height: 350px;
-  display: flex;
-  flex-direction: column;
-}
-textarea {
-  flex-grow: 1;
-  padding: 10px;
-  font-size: 16px;
-  border: 2px solid #2196f3;
-  border-radius: 6px;
-  background: #f9f9f9;
-}
-textarea:disabled {
-  background: #f0f0f0;
-  color: #777;
-  border: 2px solid #2196f3;
-}
-#historyTitle {
-  margin-top: 10px;
-  font-size: 16px;
-  font-weight: bold;
-  color: #2196f3;
-}
-#history {
-  display: none;
-  margin-top: 6px;
-  font-size: 16px;
-  text-align: left;
-  white-space: pre-line;
-  background: #f9f9f9;
-  padding: 10px;
-  border: 1px solid #ccc;
-  border-radius: 6px;
-  overflow-y: auto;
-}
-.popup {
-  display: none;
-  position: fixed;
-  top: 0; left: 0;
-  width: 100%; height: 100%;
-  background: rgba(0,0,0,0.6);
-  justify-content: center;
-  align-items: center;
-  z-index: 1000;
-}
-.popup-content {
-  background: #fff;
-  padding: 30px;
-  border-radius: 10px;
-  text-align: center;
-  max-width: 90%;
-  box-shadow: 0 2px 10px rgba(0,0,0,0.25);
-}
-footer {
-  margin-top: 40px;
-  font-size: 0.9em;
-  color: #777;
-}
+  body {
+    font-family: 'Quicksand', sans-serif;
+    background: linear-gradient(135deg, #e6f3ff, #ffffff);
+    color: #333;
+    text-align: center;
+    padding: 20px;
+  }
+  header {
+    padding: 20px;
+  }
+  header h1 {
+    font-size: 2.8em;
+    color: #2196f3;
+    font-weight: bold;
+    text-shadow: 2px 2px 3px rgba(0, 0, 0, 0.1);
+  }
+  #gameContainer {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 30px;
+  }
+  @media (min-width: 768px) {
+    #gameContainer {
+      flex-direction: row;
+      justify-content: center;
+    }
+  }
+  #wheelContainer {
+    position: relative;
+    width: 100%;
+    max-width: 80vmin;
+  }
+  canvas {
+    width: 100%;
+    height: auto;
+    border-radius: 50%;
+    box-shadow: 0 4px 20px rgba(0, 0, 0, 0.15);
+    cursor: pointer;
+  }
+  #textInputContainer {
+    width: 100%;
+    max-width: 300px;
+  }
+  textarea {
+    width: 100%;
+    height: 300px;
+    padding: 10px;
+    font-size: 16px;
+    border: 2px solid #2196f3;
+    border-radius: 6px;
+    outline: none;
+    background: #f9f9f9;
+    font-family: 'Quicksand', sans-serif;
+  }
+  textarea:disabled {
+    background: #f0f0f0;
+    color: #777;
+    border: 2px solid #2196f3;
+    cursor: not-allowed;
+  }
+  #historyTitle {
+    margin-top: 20px;
+    font-size: 16px;
+    font-weight: bold;
+    color: #2196f3;
+  }
+  #history {
+    display: none;
+    margin-top: 10px;
+    font-size: 16px;
+    color: #333;
+    text-align: left;
+    white-space: pre-line;
+    background: #f9f9f9;
+    padding: 10px;
+    border: 1px solid #ccc;
+    border-radius: 6px;
+    max-height: 150px;
+    overflow-y: auto;
+    font-family: 'Quicksand', sans-serif;
+  }
+  .popup {
+    display: none;
+    position: fixed;
+    top: 0; left: 0;
+    width: 100%; height: 100%;
+    background: rgba(0,0,0,0.6);
+    justify-content: center;
+    align-items: center;
+    z-index: 1000;
+  }
+  .popup-content {
+    background: #fff;
+    padding: 30px;
+    border-radius: 10px;
+    text-align: center;
+    max-width: 90%;
+    box-shadow: 0 2px 10px rgba(0, 0, 0, 0.25);
+  }
+  .popup-content button {
+    margin-top: 20px;
+    padding: 10px 20px;
+    border: none;
+    background: #2196f3;
+    color: white;
+    border-radius: 5px;
+    font-size: 16px;
+    cursor: pointer;
+  }
+  footer {
+    margin-top: 40px;
+    font-size: 0.9em;
+    color: #777;
+  }
+  
