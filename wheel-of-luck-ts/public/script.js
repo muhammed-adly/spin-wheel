@@ -5,16 +5,15 @@ let popup = document.getElementById("popup");
 let popupResult = document.getElementById("popupResult");
 let historyBox = document.getElementById("history");
 let segments = namesInput.value.trim().split("\n").filter(Boolean);
-let history = [], colors = [];
+let history = [], colors = [], idleTimer;
 let startAngle = 0, arc, spinTime = 0, spinTimeTotal = 0, spinAngleTotal = 0;
 let spinning = false;
-let idleTimer;
 
-const tickSound = new Howl({ src: ['https://assets.mixkit.co/sfx/preview/mixkit-select-click-1109.mp3'] });
+const tickSound = new Howl({ src: ['sounds/tick.mp3'] });
 
 function generateColors(n) {
-  const palette = ['#e57373', '#64b5f6', '#81c784', '#ffb74d', '#ba68c8', '#4dd0e1', '#ffd54f'];
-  return Array.from({ length: n }, (_, i) => palette[i % palette.length]);
+  const base = ['#e57373', '#64b5f6', '#81c784', '#ffb74d', '#ba68c8', '#4dd0e1', '#ffd54f'];
+  return Array.from({ length: n }, (_, i) => base[i % base.length]);
 }
 
 function resizeCanvas() {
@@ -55,7 +54,7 @@ function drawWheel() {
   ctx.beginPath();
   ctx.arc(radius, radius, radius * 0.12, 0, Math.PI * 2);
   ctx.fillStyle = "#2e7d32";
-  ctx.shadowColor = "rgba(0, 0, 0, 0.3)";
+  ctx.shadowColor = "rgba(0, 0, 0, 0.2)";
   ctx.shadowBlur = 10;
   ctx.fill();
 
@@ -101,7 +100,7 @@ function stopRotateWheel() {
   namesInput.disabled = false;
   history.unshift(result);
   historyBox.style.display = "block";
-  historyBox.innerText = history.slice(0, 10).join('\n');
+  historyBox.innerText = history.slice(0, 10).join('\\n');
 }
 
 function spin() {
@@ -120,17 +119,16 @@ function resetIdleTimer() {
   clearTimeout(idleTimer);
   idleTimer = setTimeout(() => {
     if (!spinning) spin();
-  }, 15000); // 15s idle
+  }, 15000);
 }
 
 canvas.addEventListener("click", spin);
 namesInput.addEventListener("input", () => {
-  segments = namesInput.value.trim().split("\n").filter(Boolean);
+  segments = namesInput.value.trim().split("\\n").filter(Boolean);
   colors = generateColors(segments.length);
   startAngle = 0;
   drawWheel();
 });
-
 window.addEventListener("resize", resizeCanvas);
 resizeCanvas();
 resetIdleTimer();
