@@ -17,7 +17,7 @@ let history = [];
 
 
 function resizeCanvas() {
-  const size = Math.min(window.innerWidth * 0.7, window.innerHeight * 0.7);
+  const size = Math.min(window.innerWidth * 0.7, window.innerHeight * 0.6);
   canvas.width = size;
   canvas.height = size;
   drawWheel();
@@ -65,7 +65,7 @@ function drawWheel() {
   // Central spin button
   ctx.beginPath();
   ctx.arc(radius, radius, radius * 0.12, 0, Math.PI * 2);
-  ctx.fillStyle = "#2e7d32";
+  ctx.fillStyle = "#2196f3"; // Light blue
   ctx.shadowColor = "rgba(0, 0, 0, 0.2)";
   ctx.shadowBlur = 10;
   ctx.fill();
