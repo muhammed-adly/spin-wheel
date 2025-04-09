@@ -1,4 +1,3 @@
-
 let canvas = document.getElementById("wheelCanvas");
 let ctx = canvas.getContext("2d");
 let namesInput = document.getElementById("namesInput");
@@ -9,7 +8,9 @@ let segments = namesInput.value.trim().split("\n").filter(Boolean);
 let history = [], colors = [];
 let startAngle = 0, arc = 0, spinTime = 0, spinTimeTotal = 0, spinAngleTotal = 0;
 let spinning = false, idleTimer;
+let hasUserSpun = false;
 
+// Tick sound via Howler (assuming you load it in the page or from node later)
 const tickSound = new Howl({ src: ['sounds/tick.mp3'] });
 
 function generateColors(n) {
@@ -56,6 +57,7 @@ function drawWheel() {
     ctx.restore();
   });
 
+  // Center circle (spin)
   ctx.beginPath();
   ctx.arc(radius, radius, radius * 0.12, 0, Math.PI * 2);
   ctx.fillStyle = "#2e7d32";
@@ -63,6 +65,7 @@ function drawWheel() {
   ctx.shadowBlur = 10;
   ctx.fill();
 
+  // Triangle pointer
   ctx.beginPath();
   ctx.moveTo(radius, radius * 0.12);
   ctx.lineTo(radius - 12, radius * 0.03);
@@ -73,6 +76,7 @@ function drawWheel() {
   ctx.shadowBlur = 5;
   ctx.fill();
 
+  // Spin label
   ctx.shadowBlur = 0;
   ctx.fillStyle = "#fff";
   ctx.font = `bold ${Math.floor(radius * 0.08)}px Quicksand`;
@@ -81,20 +85,22 @@ function drawWheel() {
 }
 
 function easeOutCubic(t, b, c, d) {
-  t /= d; t--; return c * (t * t * t + 1) + b;
+  t /= d;
+  t--;
+  return c * (t * t * t + 1) + b;
 }
 
-function rotateWheel() {
+function rotateWheel(showResult = true) {
   spinTime += 30;
   if (spinTime >= spinTimeTotal) {
-    stopRotateWheel();
+    if (showResult) stopRotateWheel();
     return;
   }
   if (spinTime % 150 === 0) tickSound.play();
   const spinAngle = easeOutCubic(spinTime, 0, spinAngleTotal, spinTimeTotal);
   startAngle += (spinAngle * Math.PI / 180);
   drawWheel();
-  requestAnimationFrame(rotateWheel);
+  requestAnimationFrame(() => rotateWheel(showResult));
 }
 
 function stopRotateWheel() {
@@ -111,7 +117,7 @@ function stopRotateWheel() {
   historyBox.innerText = history.slice(0, 10).join('\n');
 }
 
-function spin() {
+function spin(showResult = true) {
   if (spinning) return;
   clearTimeout(idleTimer);
   spinning = true;
@@ -119,18 +125,21 @@ function spin() {
   spinTime = 0;
   spinTimeTotal = Math.random() * 3000 + 6000;
   spinAngleTotal = Math.random() * 1000 + 1500;
-  rotateWheel();
+  rotateWheel(showResult);
+  if (showResult) hasUserSpun = true;
   resetIdleTimer();
 }
 
 function resetIdleTimer() {
   clearTimeout(idleTimer);
-  idleTimer = setTimeout(() => {
-    if (!spinning) spin();
-  }, 15000);
+  if (!hasUserSpun) {
+    idleTimer = setTimeout(() => {
+      if (!spinning) spin(false); // idle spin with no result
+    }, 10000);
+  }
 }
 
-canvas.addEventListener("click", spin);
+canvas.addEventListener("click", () => spin(true));
 namesInput.addEventListener("input", () => {
   drawWheel();
 });
