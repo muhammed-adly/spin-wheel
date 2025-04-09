@@ -40,11 +40,11 @@ function drawWheel() {
   segments.forEach((label, i) => {
     const angle = startAngle + i * arc;
     ctx.beginPath();
-    ctx.fillStyle = colors[i];
-    ctx.moveTo(radius, radius);
-    ctx.arc(radius, radius, radius - 10, angle, angle + arc);
-    ctx.lineTo(radius, radius);
-    ctx.fill();
+    ctx.arc(radius, radius, radius * 0.12, 0, Math.PI * 2);
+    ctx.fillStyle = "#2196f3"; // light blue
+    ctx.shadowColor = "rgba(0, 0, 0, 0.25)";
+    ctx.shadowBlur = spinning ? 4 : 10; // pressed feel while spinning
+    ctx.fill();    
 
     ctx.save();
     ctx.translate(radius, radius);
