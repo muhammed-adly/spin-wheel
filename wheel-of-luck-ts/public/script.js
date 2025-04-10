@@ -16,9 +16,14 @@ let spinning = false;
 let history = [];
 
 function resizeCanvas() {
-  const size = Math.min(window.innerWidth * 0.9, window.innerHeight * 0.9, 450);
-  canvas.width = size;
-  canvas.height = size;
+  const size = Math.min(window.innerWidth * 0.45, window.innerHeight * 0.6);
+  const dpr = window.devicePixelRatio || 1;
+  canvas.style.width = `${size}px`;
+  canvas.style.height = `${size}px`;
+  canvas.width = size * dpr;
+  canvas.height = size * dpr;
+  ctx.setTransform(1, 0, 0, 1, 0, 0); // reset transform
+  ctx.scale(dpr, dpr);
   drawWheel();
 }
 
