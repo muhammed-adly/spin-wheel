@@ -17,11 +17,21 @@ let history = [];
 
 
 function resizeCanvas() {
+  const dpr = window.devicePixelRatio || 1;
   const size = Math.min(window.innerWidth * 0.7, window.innerHeight * 0.6);
-  canvas.width = size;
-  canvas.height = size;
+  
+  canvas.style.width = size + 'px';   // CSS size
+  canvas.style.height = size + 'px';
+
+  canvas.width = size * dpr;          // actual pixel size
+  canvas.height = size * dpr;
+
+  ctx.setTransform(1, 0, 0, 1, 0, 0); // reset transform
+  ctx.scale(dpr, dpr);                // scale drawing context
+
   drawWheel();
 }
+
 
 function generateColors(n) {
   const baseColors = ['#e57373', '#64b5f6', '#81c784', '#ffb74d', '#ba68c8', '#4dd0e1', '#ffd54f'];
