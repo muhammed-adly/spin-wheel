@@ -146,5 +146,8 @@
     margin-top: 40px;
     font-size: 0.9em;
     color: #777;
+    background: transparent; /* Fix */
+    box-shadow: none;        /* Just in case */
   }
+  
   

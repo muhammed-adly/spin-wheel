@@ -17,20 +17,24 @@ let history = [];
 
 
 function resizeCanvas() {
-  const size = Math.min(window.innerWidth * 0.9, 500); // keep it reasonable
+  const cssSize = Math.min(window.innerWidth * 0.45, 450); // Logical CSS size
   const dpr = window.devicePixelRatio || 1;
 
-  canvas.style.width = `${size}px`;      // CSS size
-  canvas.style.height = `${size}px`;     // CSS size
+  // Set canvas size in device pixels
+  canvas.width = cssSize * dpr;
+  canvas.height = cssSize * dpr;
 
-  canvas.width = size * dpr;             // actual pixel size
-  canvas.height = size * dpr;
+  // Set canvas display size in CSS pixels
+  canvas.style.width = `${cssSize}px`;
+  canvas.style.height = `${cssSize}px`;
 
-  ctx.setTransform(1, 0, 0, 1, 0, 0);     // reset any transforms
-  ctx.scale(dpr, dpr);                   // scale canvas drawing to match dpr
+  // Scale drawing operations to account for high DPI
+  ctx.setTransform(1, 0, 0, 1, 0, 0);
+  ctx.scale(dpr, dpr);
 
   drawWheel();
 }
+
 
 
 
