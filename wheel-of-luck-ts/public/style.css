@@ -57,10 +57,12 @@ canvas {
   cursor: pointer;
 }
 
-#textInputContainer {
-  flex: 1;
-  max-width: 420px;
-  width: 100%;
+#textInputContainer h3 {
+  color: #2196f3;
+  text-align: left;
+  font-weight: bold;
+  font-size: 16px;
+  margin-bottom: 10px;
 }
 
 textarea {
