@@ -19,18 +19,16 @@ function resizeCanvas() {
   const containerSize = Math.min(window.innerWidth * 0.45, window.innerHeight * 0.6);
   const dpr = window.devicePixelRatio || 1;
 
-  // Set canvas display size
   canvas.style.width = `${containerSize}px`;
   canvas.style.height = `${containerSize}px`;
 
-  // Set internal drawing resolution (matching display size * dpr)
   canvas.width = containerSize * dpr;
   canvas.height = containerSize * dpr;
 
-  // Apply scaling to draw crisply
-  ctx.setTransform(1, 0, 0, 1, 0, 0); // Reset any transform
-  ctx.scale(dpr, dpr);               // Scale context
-  drawWheel();
+  ctx.setTransform(1, 0, 0, 1, 0, 0);
+  ctx.scale(dpr, dpr);
+
+  drawWheel(containerSize); // pass in the visible size
 }
 
 
@@ -44,10 +42,11 @@ function generateColors(n) {
   return result;
 }
 
-function drawWheel() {
-  const radius = canvas.width / 2;
-  ctx.clearRect(0, 0, canvas.width, canvas.height);
+function drawWheel(visibleSize) {
+  const radius = visibleSize / 2; // use visible size, not canvas.width!
   arc = Math.PI * 2 / segments.length;
+
+  ctx.clearRect(0, 0, visibleSize, visibleSize);
 
   segments.forEach((label, i) => {
     const angle = startAngle + i * arc;
@@ -64,12 +63,14 @@ function drawWheel() {
     ctx.textAlign = "right";
     ctx.fillStyle = "#333";
     ctx.font = `${Math.floor(radius / 12)}px Quicksand`;
+
     let shortLabel = label;
     let maxWidth = radius * 0.75;
     while (ctx.measureText(shortLabel).width > maxWidth && shortLabel.length > 0) {
       shortLabel = shortLabel.slice(0, -1);
     }
     if (shortLabel !== label) shortLabel = shortLabel.slice(0, -1) + "…";
+
     ctx.fillText(shortLabel, radius - 20, 10);
     ctx.restore();
   });
@@ -77,7 +78,7 @@ function drawWheel() {
   // Central spin button
   ctx.beginPath();
   ctx.arc(radius, radius, radius * 0.12, 0, Math.PI * 2);
-  ctx.fillStyle = "#2196f3"; // Light blue
+  ctx.fillStyle = "#2196f3";
   ctx.shadowColor = "rgba(0, 0, 0, 0.2)";
   ctx.shadowBlur = 10;
   ctx.fill();
@@ -93,13 +94,13 @@ function drawWheel() {
   ctx.shadowBlur = 5;
   ctx.fill();
 
-  // SPIN label
   ctx.shadowBlur = 0;
   ctx.fillStyle = "#fff";
   ctx.font = `bold ${Math.floor(radius * 0.08)}px Quicksand`;
   ctx.textAlign = "center";
   ctx.fillText("SPIN", radius, radius + radius * 0.03);
 }
+
 
 function easeOutCubic(t, b, c, d) {
   t /= d;
@@ -150,13 +151,10 @@ namesInput.addEventListener("input", () => {
   segments = namesInput.value.trim().split("\n").filter(Boolean);
   colors = generateColors(segments.length);
   startAngle = 0;
-  drawWheel();
+  resizeCanvas(); // update everything on input change
 });
 
 window.addEventListener("resize", resizeCanvas);
 
-// Wait until font loads then draw
-document.fonts.ready.then(() => {
-  resizeCanvas();
-  drawWheel();
-});
+// Wait for fonts to load before drawing the wheel
+document.fonts.ready.then(resizeCanvas);
