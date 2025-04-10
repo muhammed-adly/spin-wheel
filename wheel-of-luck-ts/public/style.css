@@ -43,17 +43,19 @@
     position: relative;
     width: 100%;
     max-width: 80vmin;
+    min-width: 280px; /* Prevent canvas from being tiny */
   }
   
   canvas {
     display: block;
     width: 100%;
     height: auto;
+    max-width: 500px;
     border-radius: 50%;
     box-shadow: 0 4px 20px rgba(0,0,0,0.15);
     cursor: pointer;
-  }
-  
+  }  
+
   
   #textInputContainer h3 {
     color: #2196f3;

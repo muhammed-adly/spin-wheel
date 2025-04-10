@@ -16,7 +16,9 @@ let spinning = false;
 let history = [];
 
 function resizeCanvas() {
-  const containerSize = Math.min(window.innerWidth * 0.45, window.innerHeight * 0.6);
+  const visibleWidth = Math.min(window.innerWidth * 0.9, 500);  // Cap at 500px
+  const visibleHeight = window.innerHeight * 0.6;
+  const containerSize = Math.min(visibleWidth, visibleHeight);
   const dpr = window.devicePixelRatio || 1;
 
   canvas.style.width = `${containerSize}px`;
@@ -28,8 +30,9 @@ function resizeCanvas() {
   ctx.setTransform(1, 0, 0, 1, 0, 0);
   ctx.scale(dpr, dpr);
 
-  drawWheel(containerSize); // pass in the visible size
+  drawWheel(containerSize);
 }
+
 
 
 
