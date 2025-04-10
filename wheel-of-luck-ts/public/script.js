@@ -16,16 +16,24 @@ let spinning = false;
 let history = [];
 
 function resizeCanvas() {
-  const size = Math.min(window.innerWidth * 0.45, window.innerHeight * 0.6);
+  const containerSize = Math.min(window.innerWidth * 0.45, window.innerHeight * 0.6);
   const dpr = window.devicePixelRatio || 1;
-  canvas.style.width = `${size}px`;
-  canvas.style.height = `${size}px`;
-  canvas.width = size * dpr;
-  canvas.height = size * dpr;
-  ctx.setTransform(1, 0, 0, 1, 0, 0); // reset transform
-  ctx.scale(dpr, dpr);
+
+  // Set canvas internal (drawing) resolution
+  canvas.width = containerSize * dpr;
+  canvas.height = containerSize * dpr;
+
+  // Set canvas visual size (CSS)
+  canvas.style.width = `${containerSize}px`;
+  canvas.style.height = `${containerSize}px`;
+
+  // Fix blur on retina screens
+  ctx.setTransform(1, 0, 0, 1, 0, 0); // Reset any previous scaling
+  ctx.scale(dpr, dpr);               // Scale for HiDPI
+
   drawWheel();
 }
+
 
 
 function generateColors(n) {
