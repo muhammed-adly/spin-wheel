@@ -19,18 +19,17 @@ function resizeCanvas() {
   const containerSize = Math.min(window.innerWidth * 0.45, window.innerHeight * 0.6);
   const dpr = window.devicePixelRatio || 1;
 
-  // Set canvas internal (drawing) resolution
-  canvas.width = containerSize * dpr;
-  canvas.height = containerSize * dpr;
-
-  // Set canvas visual size (CSS)
+  // Set canvas display size
   canvas.style.width = `${containerSize}px`;
   canvas.style.height = `${containerSize}px`;
 
-  // Fix blur on retina screens
-  ctx.setTransform(1, 0, 0, 1, 0, 0); // Reset any previous scaling
-  ctx.scale(dpr, dpr);               // Scale for HiDPI
+  // Set internal drawing resolution (matching display size * dpr)
+  canvas.width = containerSize * dpr;
+  canvas.height = containerSize * dpr;
 
+  // Apply scaling to draw crisply
+  ctx.setTransform(1, 0, 0, 1, 0, 0); // Reset any transform
+  ctx.scale(dpr, dpr);               // Scale context
   drawWheel();
 }
 
