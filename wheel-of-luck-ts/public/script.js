@@ -15,27 +15,12 @@ let spinAngleTotal = 0;
 let spinning = false;
 let history = [];
 
-
 function resizeCanvas() {
-  const cssSize = Math.min(window.innerWidth * 0.45, 450); // Logical CSS size
-  const dpr = window.devicePixelRatio || 1;
-
-  // Set canvas size in device pixels
-  canvas.width = cssSize * dpr;
-  canvas.height = cssSize * dpr;
-
-  // Set canvas display size in CSS pixels
-  canvas.style.width = `${cssSize}px`;
-  canvas.style.height = `${cssSize}px`;
-
-  // Scale drawing operations to account for high DPI
-  ctx.setTransform(1, 0, 0, 1, 0, 0);
-  ctx.scale(dpr, dpr);
-
+  const size = Math.min(window.innerWidth * 0.9, window.innerHeight * 0.9, 450);
+  canvas.width = size;
+  canvas.height = size;
   drawWheel();
 }
-
-
 
 
 function generateColors(n) {
