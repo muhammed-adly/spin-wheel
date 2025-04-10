@@ -61,8 +61,9 @@ canvas {
   color: #2196f3;
   text-align: left;
   font-weight: bold;
-  font-size: 16px;
-  margin-bottom: 10px;
+  flex: 1;
+  width: 100%;
+  max-width: 100%;
 }
 
 textarea {
@@ -72,10 +73,14 @@ textarea {
   font-size: 16px;
   border: 2px solid #2196f3;
   border-radius: 6px;
+  outline: none;
   background: #f9f9f9;
   font-family: 'Quicksand', sans-serif;
-  resize: vertical;
+  max-width: 100%;
+  min-width: 280px;
+  resize: vertical; /* optional: allows the user to resize it vertically only */
 }
+
 
 
 textarea:disabled {
