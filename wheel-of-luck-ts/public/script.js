@@ -17,20 +17,23 @@ let history = [];
 
 
 function resizeCanvas() {
-  const dpr = window.devicePixelRatio || 1;
-  const size = Math.min(window.innerWidth * 0.7, window.innerHeight * 0.6);
-  
-  canvas.style.width = size + 'px';   // CSS size
+  const size = Math.min(window.innerWidth * 0.9, window.innerHeight * 0.9);
+  const scale = window.devicePixelRatio || 1;
+
+  // Set canvas width/height based on pixel ratio
+  canvas.width = size * scale;
+  canvas.height = size * scale;
+
+  // CSS size (what users see)
+  canvas.style.width = size + 'px';
   canvas.style.height = size + 'px';
 
-  canvas.width = size * dpr;          // actual pixel size
-  canvas.height = size * dpr;
-
-  ctx.setTransform(1, 0, 0, 1, 0, 0); // reset transform
-  ctx.scale(dpr, dpr);                // scale drawing context
+  // Scale the context for high DPI rendering
+  ctx.setTransform(scale, 0, 0, scale, 0, 0);
 
   drawWheel();
 }
+
 
 
 function generateColors(n) {
