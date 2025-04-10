@@ -16,9 +16,8 @@ let spinning = false;
 let history = [];
 
 function resizeCanvas() {
-  const visibleWidth = Math.min(window.innerWidth * 0.9, 500);  // Cap at 500px
-  const visibleHeight = window.innerHeight * 0.6;
-  const containerSize = Math.min(visibleWidth, visibleHeight);
+  const container = document.getElementById("wheelContainer");
+  const containerSize = container.offsetWidth;
   const dpr = window.devicePixelRatio || 1;
 
   canvas.style.width = `${containerSize}px`;
