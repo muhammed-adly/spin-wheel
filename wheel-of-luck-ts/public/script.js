@@ -117,7 +117,7 @@ function rotateWheel() {
 
   const spinAngle = easeOutCubic(spinTime, 0, spinAngleTotal, spinTimeTotal);
   startAngle += (spinAngle * Math.PI / 180);
-  drawWheel();
+  drawWheel(canvas.clientWidth);
   requestAnimationFrame(rotateWheel);
 }
 
