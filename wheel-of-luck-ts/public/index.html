@@ -1,8 +1,8 @@
 <!DOCTYPE html>
 <html lang="en">
-
 <head>
   <title>Wheel of Luck</title>
+
   <link rel="stylesheet" href="style.css" />
   <link href="https://fonts.googleapis.com/css2?family=Quicksand:wght@400;700&display=swap" rel="stylesheet" />
   <link rel="icon" href="/favicon.ico" type="image/x-icon" />
@@ -36,18 +36,26 @@
       </div>
 
       <div id="textInputContainer">
-        <h3>Enter one item per line:</h3>
-        <textarea id="namesInput">Yes
+        <div class="tab-buttons">
+          <button id="entriesTab" class="active" onclick="showTab('entries')">Entries</button>
+          <button id="resultsTab" onclick="showTab('results')">Results</button>
+        </div>
+
+        <div id="entries-panel" class="tab-panel active">
+          <div id="spinCount">Spins: 0</div>
+          <h3>Enter one item per line:</h3>
+          <textarea id="namesInput">Yes
 No
 Yes
 No
 Yes</textarea>
+        </div>
 
-        <div id="spinCount">Spins: 0</div>
-
-        <div id="historyWrapper">
-          <div id="historyTitle">Previous Spins:</div>
-          <div id="history"></div>
+        <div id="results-panel" class="tab-panel">
+          <div id="historyWrapper">
+            <div id="historyTitle">Previous Spins:</div>
+            <div id="history"></div>
+          </div>
         </div>
       </div>
     </div>
@@ -66,24 +74,23 @@ Yes</textarea>
   </footer>
 
   <script type="application/ld+json">
-    {
-      "@context": "https://schema.org",
-      "@type": "WebSite",
-      "name": "Wheel of Luck",
-      "url": "https://www.spinthewheeel.com"
-    }
+  {
+    "@context": "https://schema.org",
+    "@type": "WebSite",
+    "name": "Wheel of Luck",
+    "url": "https://www.spinthewheeel.com"
+  }
   </script>
 
   <script src="script.js"></script>
 
-  <!-- Google Analytics -->
+  <!-- Google tag (gtag.js) - Analytics -->
   <script async src="https://www.googletagmanager.com/gtag/js?id=G-6DM157ZXMR"></script>
   <script>
     window.dataLayer = window.dataLayer || [];
-    function gtag() { dataLayer.push(arguments); }
+    function gtag(){dataLayer.push(arguments);}
     gtag('js', new Date());
     gtag('config', 'G-6DM157ZXMR');
   </script>
 </body>
-
 </html>

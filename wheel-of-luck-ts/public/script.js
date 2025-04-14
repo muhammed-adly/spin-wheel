@@ -4,7 +4,11 @@ const namesInput = document.getElementById("namesInput");
 const popup = document.getElementById("popup");
 const popupResult = document.getElementById("popupResult");
 const historyBox = document.getElementById("history");
-const spinCountEl = document.getElementById("spinCount");
+const spinCountLabel = document.getElementById("spinCount");
+const entriesTab = document.getElementById("tab-entries");
+const resultsTab = document.getElementById("tab-results");
+const entriesPanel = document.getElementById("entries-panel");
+const resultsPanel = document.getElementById("results-panel");
 
 let segments = namesInput.value.trim().split("\n").filter(Boolean);
 let colors = generateColors(segments.length);
@@ -15,7 +19,6 @@ let spinTimeTotal = 0;
 let spinAngleTotal = 0;
 let spinning = false;
 let history = [];
-let spinCount = 0;
 
 function resizeCanvas() {
   const container = document.getElementById("wheelContainer");
@@ -35,17 +38,12 @@ function resizeCanvas() {
 
 function generateColors(n) {
   const baseColors = ['#e57373', '#64b5f6', '#81c784', '#ffb74d', '#ba68c8', '#4dd0e1', '#ffd54f'];
-  const result = [];
-  for (let i = 0; i < n; i++) {
-    result.push(baseColors[i % baseColors.length]);
-  }
-  return result;
+  return Array.from({ length: n }, (_, i) => baseColors[i % baseColors.length]);
 }
 
 function drawWheel(visibleSize) {
   const radius = visibleSize / 2;
   arc = Math.PI * 2 / segments.length;
-
   ctx.clearRect(0, 0, visibleSize, visibleSize);
 
   segments.forEach((label, i) => {
@@ -54,8 +52,7 @@ function drawWheel(visibleSize) {
     ctx.fillStyle = colors[i];
     ctx.moveTo(radius, radius);
     ctx.arc(radius, radius, radius - 10, angle, angle + arc);
-    ctx.lineTo(radius, radius);
-    ctx.fill();    
+    ctx.fill();
 
     ctx.save();
     ctx.translate(radius, radius);
@@ -65,17 +62,16 @@ function drawWheel(visibleSize) {
     ctx.font = `${Math.floor(radius / 12)}px Quicksand`;
 
     let shortLabel = label;
-    let maxWidth = radius * 0.75;
+    const maxWidth = radius * 0.75;
     while (ctx.measureText(shortLabel).width > maxWidth && shortLabel.length > 0) {
       shortLabel = shortLabel.slice(0, -1);
     }
     if (shortLabel !== label) shortLabel = shortLabel.slice(0, -1) + "…";
-
     ctx.fillText(shortLabel, radius - 20, 10);
     ctx.restore();
   });
 
-  // Central spin button
+  // Spin button
   ctx.beginPath();
   ctx.arc(radius, radius, radius * 0.12, 0, Math.PI * 2);
   ctx.fillStyle = "#2196f3";
@@ -129,15 +125,10 @@ function stopRotateWheel() {
   popup.style.display = "flex";
   spinning = false;
   namesInput.disabled = false;
-  history.unshift(result);
-  spinCount++;
-  updateUI();
-}
 
-function updateUI() {
-  historyBox.style.display = "block";
-  historyBox.innerText = history.slice(0, 10).join('\n');
-  spinCountEl.textContent = `Spins: ${spinCount}`;
+  history.unshift(result);
+  spinCountLabel.textContent = `Spins: ${history.length}`;
+  updateHistory();
 }
 
 function spin() {
@@ -150,6 +141,10 @@ function spin() {
   rotateWheel();
 }
 
+function updateHistory() {
+  historyBox.innerText = history.slice(0, 10).join('\n');
+}
+
 canvas.addEventListener("click", spin);
 
 namesInput.addEventListener("input", () => {
@@ -157,6 +152,21 @@ namesInput.addEventListener("input", () => {
   colors = generateColors(segments.length);
   startAngle = 0;
   resizeCanvas();
+});
+
+entriesTab.addEventListener("click", () => {
+  entriesTab.classList.add("active");
+  resultsTab.classList.remove("active");
+  entriesPanel.style.display = "block";
+  resultsPanel.style.display = "none";
+});
+
+resultsTab.addEventListener("click", () => {
+  resultsTab.classList.add("active");
+  entriesTab.classList.remove("active");
+  entriesPanel.style.display = "none";
+  resultsPanel.style.display = "block";
+  updateHistory();
 });
 
 window.addEventListener("resize", resizeCanvas);

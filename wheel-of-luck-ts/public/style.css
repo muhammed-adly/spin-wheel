@@ -9,7 +9,9 @@ body {
   background: linear-gradient(135deg, #e6f3ff, #ffffff);
   color: #333;
   text-align: center;
-  padding: 20px 5vw;
+  padding: 20px;
+  padding-left: 5vw;
+  padding-right: 5vw;
 }
 
 header {
@@ -55,24 +57,66 @@ canvas {
   cursor: pointer;
 }
 
+/* Tabs */
+.tab-buttons {
+  display: flex;
+  justify-content: center;
+  margin-bottom: 10px;
+}
+
+.tab-buttons button {
+  padding: 10px 20px;
+  border: none;
+  background-color: #ccc;
+  color: #000;
+  font-weight: bold;
+  cursor: pointer;
+  flex: 1;
+  max-width: 150px;
+}
+
+.tab-buttons button.active {
+  background-color: #2196f3;
+  color: #fff;
+  border-radius: 5px;
+}
+
+.tab-panel {
+  display: none;
+}
+
+#entries-panel,
+#results-panel {
+  width: 100%;
+  max-width: 420px;
+}
+
+#entries-panel.active,
+#results-panel.active {
+  display: block;
+}
+
 #textInputContainer {
   flex: 1;
-  max-width: 500px;
+  max-width: 420px;
   width: 100%;
 }
 
-#textInputContainer h3,
-#historyTitle,
+/* Spin counter */
 #spinCount {
+  color: #2196f3;
+  font-weight: bold;
+  text-align: left;
+  margin: 10px 0;
+}
+
+/* Input and history */
+#textInputContainer h3,
+#historyTitle {
   color: #2196f3;
   text-align: left;
   font-weight: bold;
-  margin: 15px 0 10px;
-  font-size: 18px;
-}
-
-#spinCount {
-  margin-top: 15px;
+  margin-bottom: 10px;
 }
 
 textarea {
@@ -85,7 +129,6 @@ textarea {
   outline: none;
   background: #f9f9f9;
   font-family: 'Quicksand', sans-serif;
-  min-width: 280px;
   resize: vertical;
 }
 
@@ -103,7 +146,7 @@ textarea:disabled {
 }
 
 #history {
-  display: none;
+  display: block;
   margin-top: 10px;
   font-size: 16px;
   font-weight: bold;
@@ -118,6 +161,7 @@ textarea:disabled {
   font-family: 'Quicksand', sans-serif;
 }
 
+/* Popup */
 .popup {
   display: none;
   position: fixed;
