@@ -1,24 +1,44 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <title>Wheel of Luck</title>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Wheel of Luck</title>
+
+  <!-- Favicon -->
   <link rel="icon" href="/favicon.ico" type="image/x-icon" />
+
+  <!-- Fonts & CSS -->
   <link rel="stylesheet" href="style.css" />
   <link href="https://fonts.googleapis.com/css2?family=Quicksand:wght@400;700&display=swap" rel="stylesheet" />
-  <!-- SEO -->
+
+  <!-- SEO Meta Tags -->
   <meta name="description" content="Spin the Wheel of Luck and let fate decide your prize! Simple, fun, and beautifully animated." />
   <meta name="keywords" content="spin the wheel, wheel of luck, raffle, game, random picker, spin of luck, spin wheel, random wheel, choose random, random choice" />
   <meta name="author" content="Randomly Ltd." />
+
+  <!-- Open Graph (Facebook / Meta) -->
   <meta property="og:title" content="Wheel of Luck" />
   <meta property="og:description" content="Spin the Wheel of Luck and let fate decide your prize! Simple, fun, and beautifully animated." />
   <meta property="og:image" content="https://www.spinthewheeel.com/preview.png" />
   <meta property="og:url" content="https://www.spinthewheeel.com/" />
+  <meta property="og:type" content="website" />
+
+  <!-- Twitter Card -->
   <meta name="twitter:title" content="Wheel of Luck" />
   <meta name="twitter:description" content="Spin the Wheel of Luck and let fate decide your prize!" />
-  <meta name="twitter:card" content="summary_large_image" />
   <meta name="twitter:image" content="https://www.spinthewheeel.com/preview.png" />
+  <meta name="twitter:card" content="summary_large_image" />
+
+  <!-- Structured Data -->
+  <script type="application/ld+json">
+  {
+    "@context": "https://schema.org",
+    "@type": "WebSite",
+    "name": "Wheel of Luck",
+    "url": "https://www.spinthewheeel.com"
+  }
+  </script>
 </head>
 
 <body>
@@ -33,12 +53,14 @@
       </div>
 
       <div id="textInputContainer">
+        <!-- Tabs -->
         <div class="tabs">
-          <button id="tabEntries" class="tab active">Entries</button>
-          <button id="tabResults" class="tab">Results</button>
+          <button class="tab active" id="entriesTab">Entries</button>
+          <button class="tab" id="resultsTab">Results</button>
         </div>
 
-        <div id="entriesTab" class="tabContent">
+        <!-- Tab Content: Entries -->
+        <div class="tab-content" id="entriesContent">
           <h3>Enter one item per line:</h3>
           <textarea id="namesInput">Yes
 No
@@ -47,10 +69,11 @@ No
 Yes</textarea>
         </div>
 
-        <div id="resultsTab" class="tabContent hidden">
+        <!-- Tab Content: Results -->
+        <div class="tab-content hidden" id="resultsContent">
+          <div id="spinCountLabel">Spins: 0</div>
           <div id="historyTitle">Previous Spins:</div>
           <div id="history"></div>
-          <div id="spinCount">Spins: 0</div>
         </div>
       </div>
     </div>
@@ -68,11 +91,14 @@ Yes</textarea>
     &copy; 2025 Wheel of Luck. All rights reserved.
   </footer>
 
+  <!-- Main Script -->
   <script src="script.js"></script>
+
+  <!-- Google Analytics -->
   <script async src="https://www.googletagmanager.com/gtag/js?id=G-6DM157ZXMR"></script>
   <script>
     window.dataLayer = window.dataLayer || [];
-    function gtag() { dataLayer.push(arguments); }
+    function gtag(){ dataLayer.push(arguments); }
     gtag('js', new Date());
     gtag('config', 'G-6DM157ZXMR');
   </script>
