@@ -143,6 +143,22 @@ function updateHistory() {
   historyBox.innerText = history.slice(0, 10).join('\n');
 }
 
+function showTab(tab) {
+  if (tab === 'entries') {
+    document.getElementById('entriesTab').classList.add('active');
+    document.getElementById('resultsTab').classList.remove('active');
+    document.getElementById('entries-panel').classList.add('active');
+    document.getElementById('results-panel').classList.remove('active');
+  } else {
+    document.getElementById('resultsTab').classList.add('active');
+    document.getElementById('entriesTab').classList.remove('active');
+    document.getElementById('results-panel').classList.add('active');
+    document.getElementById('entries-panel').classList.remove('active');
+    updateHistory();
+  }
+}
+
+
 canvas.addEventListener("click", spin);
 
 namesInput.addEventListener("input", () => {
