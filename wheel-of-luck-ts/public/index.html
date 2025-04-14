@@ -10,6 +10,7 @@
 
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+
   <!-- SEO -->
   <meta name="description"
     content="Spin the Wheel of Luck and let fate decide your prize! Simple, fun, and beautifully animated." />
@@ -23,10 +24,8 @@
   <meta property="og:url" content="https://www.spinthewheeel.com/" />
   <meta name="twitter:title" content="Wheel of Luck" />
   <meta name="twitter:description" content="Spin the Wheel of Luck and let fate decide your prize!" />
-  <meta name="twitter:card" content="https://www.spinthewheeel.com/preview.png" />
+  <meta name="twitter:card" content="summary_large_image" />
   <meta name="twitter:image" content="https://www.spinthewheeel.com/preview.png" />
-
-
 </head>
 
 <body>
@@ -41,26 +40,22 @@
       </div>
 
       <div id="textInputContainer">
-        <h3>Enter one item per line:</h3>
-        <textarea id="namesInput">🤑 Win $1,000,000 (in Monopoly money)
-          🍕 Free Pizza Slice (if you find one)
-          🧹 Chores for a Week
-          🌴 Instant Vacation (in your imagination)
-          😱 Embarrassing Dare
-          🎉 You’re the Chosen One (no prize, just vibes)
-          📱 Drop Your Phone (but gently)
-          🐸 Ribbit! You turn into a frog for 24 hours
-          💩 Step in something mysterious...
-          🚀 Launch into space (metaphorically)
-          💤 Nap Time!
-          🔥 Roast Yourself
-          🕺 Dance Break!
-          📢 Scream “I’m Lucky!” out loud
-          🍔 Free Burger (you wish)
-        </textarea>
+        <div id="spinCount">Spins: 0</div>
 
-        <!-- prevent layout jump with fixed history area -->
-        <div id="historyWrapper">
+        <div class="tabs">
+          <button class="tab-button active" data-tab="entries">Entries</button>
+          <button class="tab-button" data-tab="results">Results</button>
+        </div>
+
+        <div class="tab-content" id="entriesTab">
+          <textarea id="namesInput">Yes
+No
+Yes
+No
+Yes</textarea>
+        </div>
+
+        <div class="tab-content" id="resultsTab" style="display: none;">
           <div id="historyTitle">Previous Spins:</div>
           <div id="history"></div>
         </div>
@@ -81,13 +76,13 @@
   </footer>
 
   <script type="application/ld+json">
-    {
-      "@context": "https://schema.org",
-      "@type": "WebSite",
-      "name": "Wheel of Luck",
-      "url": "https://www.spinthewheeel.com"
-    }
-    </script>
+  {
+    "@context": "https://schema.org",
+    "@type": "WebSite",
+    "name": "Wheel of Luck",
+    "url": "https://www.spinthewheeel.com"
+  }
+  </script>
 
   <script src="script.js"></script>
 
@@ -97,10 +92,8 @@
     window.dataLayer = window.dataLayer || [];
     function gtag() { dataLayer.push(arguments); }
     gtag('js', new Date());
-
     gtag('config', 'G-6DM157ZXMR');
   </script>
-
 </body>
 
 </html>

@@ -4,6 +4,7 @@ const namesInput = document.getElementById("namesInput");
 const popup = document.getElementById("popup");
 const popupResult = document.getElementById("popupResult");
 const historyBox = document.getElementById("history");
+const spinCountEl = document.getElementById("spinCount");
 
 let segments = namesInput.value.trim().split("\n").filter(Boolean);
 let colors = generateColors(segments.length);
@@ -14,6 +15,7 @@ let spinTimeTotal = 0;
 let spinAngleTotal = 0;
 let spinning = false;
 let history = [];
+let spinCount = 0;
 
 function resizeCanvas() {
   const container = document.getElementById("wheelContainer");
@@ -32,9 +34,6 @@ function resizeCanvas() {
   drawWheel(containerSize);
 }
 
-
-
-
 function generateColors(n) {
   const baseColors = ['#e57373', '#64b5f6', '#81c784', '#ffb74d', '#ba68c8', '#4dd0e1', '#ffd54f'];
   const result = [];
@@ -45,9 +44,8 @@ function generateColors(n) {
 }
 
 function drawWheel(visibleSize) {
-  const radius = visibleSize / 2; // use visible size, not canvas.width!
+  const radius = visibleSize / 2;
   arc = Math.PI * 2 / segments.length;
-
   ctx.clearRect(0, 0, visibleSize, visibleSize);
 
   segments.forEach((label, i) => {
@@ -57,7 +55,7 @@ function drawWheel(visibleSize) {
     ctx.moveTo(radius, radius);
     ctx.arc(radius, radius, radius - 10, angle, angle + arc);
     ctx.lineTo(radius, radius);
-    ctx.fill();    
+    ctx.fill();
 
     ctx.save();
     ctx.translate(radius, radius);
@@ -77,7 +75,7 @@ function drawWheel(visibleSize) {
     ctx.restore();
   });
 
-  // Central spin button
+  // Center button
   ctx.beginPath();
   ctx.arc(radius, radius, radius * 0.12, 0, Math.PI * 2);
   ctx.fillStyle = "#2196f3";
@@ -102,7 +100,6 @@ function drawWheel(visibleSize) {
   ctx.textAlign = "center";
   ctx.fillText("SPIN", radius, radius + radius * 0.03);
 }
-
 
 function easeOutCubic(t, b, c, d) {
   t /= d;
@@ -133,6 +130,8 @@ function stopRotateWheel() {
   spinning = false;
   namesInput.disabled = false;
   history.unshift(result);
+  spinCount++;
+  spinCountEl.textContent = spinCount;
   historyBox.style.display = "block";
   historyBox.innerText = history.slice(0, 10).join('\n');
 }
@@ -153,10 +152,8 @@ namesInput.addEventListener("input", () => {
   segments = namesInput.value.trim().split("\n").filter(Boolean);
   colors = generateColors(segments.length);
   startAngle = 0;
-  resizeCanvas(); // update everything on input change
+  resizeCanvas();
 });
 
 window.addEventListener("resize", resizeCanvas);
-
-// Wait for fonts to load before drawing the wheel
 document.fonts.ready.then(resizeCanvas);
