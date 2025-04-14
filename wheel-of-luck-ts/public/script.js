@@ -18,7 +18,8 @@ let spinAngleTotal = 0;
 let spinning = false;
 let history = [];
 
-const spinSound = new Audio("data:audio/wav;base64,UklGRiQAAABXQVZFZm10IBAAAAABAAEARKwAABCxAgAEABAAZGF0YQAAAAA="); // short click
+const spinSound = new Audio("data:audio/mp3;base64,//uQxA..."); // Short click/tick sound
+spinSound.volume = 0.5;
 
 function resizeCanvas() {
   const container = document.getElementById("wheelContainer");
@@ -104,10 +105,13 @@ function spin() {
 
 function rotateWheel() {
   spinTime += 30;
-  if (spinTime >= spinTimeTotal) return stopRotateWheel();
+  if (spinTime >= spinTimeTotal) {
+    stopRotateWheel();
+    return;
+  }
 
-  const angle = easeOutCubic(spinTime, 0, spinAngleTotal, spinTimeTotal);
-  startAngle += (angle * Math.PI / 180);
+  const spinAngle = easeOutCubic(spinTime, 0, spinAngleTotal, spinTimeTotal);
+  startAngle += (spinAngle * Math.PI / 180);
   drawWheel(canvas.clientWidth);
   requestAnimationFrame(rotateWheel);
 }

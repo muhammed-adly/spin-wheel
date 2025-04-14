@@ -105,9 +105,9 @@ canvas {
 
 /* Spin counter - moved up + larger */
 #spinCount {
-  font-size: 22px;
-  color: #ff5722; /* distinct color */
-  font-weight: bold;
+  font-size: 20px;
+  color: #000;
+  font-weight: normal;
   text-align: left;
   margin: 20px 0 10px;
 }
@@ -116,9 +116,12 @@ canvas#confettiCanvas {
   position: fixed;
   top: 0;
   left: 0;
+  width: 100% !important;
+  height: 100% !important;
   pointer-events: none;
-  z-index: 2000;
+  z-index: 1;
 }
+
 
 
 /* Tab labels */
