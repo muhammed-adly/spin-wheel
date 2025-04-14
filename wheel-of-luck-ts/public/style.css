@@ -9,13 +9,7 @@ body {
   background: linear-gradient(135deg, #e6f3ff, #ffffff);
   color: #333;
   text-align: center;
-  padding: 20px;
-  padding-left: 5vw;
-  padding-right: 5vw;
-}
-
-header {
-  padding: 20px;
+  padding: 20px 5vw;
 }
 
 header h1 {
@@ -48,7 +42,7 @@ header h1 {
   flex: 1;
 }
 
-canvas {
+canvas#wheelCanvas {
   width: 100%;
   height: auto;
   max-width: 100%;
@@ -57,44 +51,14 @@ canvas {
   cursor: pointer;
 }
 
-/* Tabs */
-.tab-buttons {
-  display: flex;
-  justify-content: center;
-  margin-bottom: 10px;
-  gap: 10px;
-}
-
-.tab-buttons button {
-  padding: 10px 20px;
-  border: none;
-  background-color: #ccc;
-  color: #000;
-  font-weight: bold;
-  cursor: pointer;
-  flex: 1;
-  max-width: 150px;
-  border-radius: 5px;
-}
-
-.tab-buttons button.active {
-  background-color: #2196f3;
-  color: #fff;
-}
-
-.tab-panel {
-  display: none;
-}
-
-#entries-panel,
-#results-panel {
-  width: 100%;
-  max-width: 420px;
-}
-
-#entries-panel.active,
-#results-panel.active {
-  display: block;
+canvas#confettiCanvas {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100vw;
+  height: 100vh;
+  pointer-events: none;
+  z-index: 1;
 }
 
 #textInputContainer {
@@ -103,7 +67,7 @@ canvas {
   width: 100%;
 }
 
-/* Spin counter - moved up + larger */
+/* Spin counter */
 #spinCount {
   font-size: 20px;
   color: #000;
@@ -112,19 +76,7 @@ canvas {
   margin: 20px 0 10px;
 }
 
-canvas#confettiCanvas {
-  position: fixed;
-  top: 0;
-  left: 0;
-  width: 100% !important;
-  height: 100% !important;
-  pointer-events: none;
-  z-index: 1;
-}
-
-
-
-/* Tab labels */
+/* Tabs */
 .tabs {
   display: flex;
   justify-content: center;
@@ -149,7 +101,6 @@ canvas#confettiCanvas {
   border-bottom: 4px solid #fff;
 }
 
-/* Panels */
 .tab-panel {
   display: none;
 }
@@ -158,7 +109,6 @@ canvas#confettiCanvas {
   display: block;
 }
 
-/* Consistent headings */
 #textInputContainer h3 {
   color: #2196f3;
   text-align: left;
@@ -173,10 +123,9 @@ textarea {
   font-size: 16px;
   border: 2px solid #2196f3;
   border-radius: 6px;
-  outline: none;
   background: #f9f9f9;
-  font-family: 'Quicksand', sans-serif;
   resize: vertical;
+  font-family: 'Quicksand', sans-serif;
 }
 
 textarea:disabled {
