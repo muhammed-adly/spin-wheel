@@ -9,11 +9,11 @@
 
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-
-  <!-- SEO -->
   <meta name="description" content="Spin the Wheel of Luck and let fate decide your prize! Simple, fun, and beautifully animated." />
   <meta name="keywords" content="spin the wheel, wheel of luck, raffle, game, random picker, spin of luck, spin wheel, random wheel, choose random, random choice" />
   <meta name="author" content="Randomly Ltd." />
+
+  <!-- Social Sharing -->
   <meta property="og:title" content="Wheel of Luck" />
   <meta property="og:description" content="Spin the Wheel of Luck and let fate decide your prize! Simple, fun, and beautifully animated." />
   <meta property="og:image" content="https://www.spinthewheeel.com/preview.png" />
@@ -41,8 +41,9 @@
           <button id="resultsTab" onclick="showTab('results')">Results</button>
         </div>
 
+        <div id="spinCount">Spins: 0</div>
+
         <div id="entries-panel" class="tab-panel active">
-          <div id="spinCount">Spins: 0</div>
           <h3>Enter one item per line:</h3>
           <textarea id="namesInput">Yes
 No
@@ -73,18 +74,9 @@ Yes</textarea>
     &copy; 2025 Wheel of Luck. All rights reserved.
   </footer>
 
-  <script type="application/ld+json">
-  {
-    "@context": "https://schema.org",
-    "@type": "WebSite",
-    "name": "Wheel of Luck",
-    "url": "https://www.spinthewheeel.com"
-  }
-  </script>
-
   <script src="script.js"></script>
 
-  <!-- Google tag (gtag.js) - Analytics -->
+  <!-- Google Analytics -->
   <script async src="https://www.googletagmanager.com/gtag/js?id=G-6DM157ZXMR"></script>
   <script>
     window.dataLayer = window.dataLayer || [];

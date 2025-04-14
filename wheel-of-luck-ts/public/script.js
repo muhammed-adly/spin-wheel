@@ -5,8 +5,8 @@ const popup = document.getElementById("popup");
 const popupResult = document.getElementById("popupResult");
 const historyBox = document.getElementById("history");
 const spinCountLabel = document.getElementById("spinCount");
-const entriesTab = document.getElementById("tab-entries");
-const resultsTab = document.getElementById("tab-results");
+const entriesTab = document.getElementById("entriesTab");
+const resultsTab = document.getElementById("resultsTab");
 const entriesPanel = document.getElementById("entries-panel");
 const resultsPanel = document.getElementById("results-panel");
 
@@ -71,7 +71,6 @@ function drawWheel(visibleSize) {
     ctx.restore();
   });
 
-  // Spin button
   ctx.beginPath();
   ctx.arc(radius, radius, radius * 0.12, 0, Math.PI * 2);
   ctx.fillStyle = "#2196f3";
@@ -79,7 +78,6 @@ function drawWheel(visibleSize) {
   ctx.shadowBlur = 10;
   ctx.fill();
 
-  // Triangle pointer
   ctx.beginPath();
   ctx.moveTo(radius, radius * 0.12);
   ctx.lineTo(radius - 12, radius * 0.03);
@@ -157,15 +155,15 @@ namesInput.addEventListener("input", () => {
 entriesTab.addEventListener("click", () => {
   entriesTab.classList.add("active");
   resultsTab.classList.remove("active");
-  entriesPanel.style.display = "block";
-  resultsPanel.style.display = "none";
+  entriesPanel.classList.add("active");
+  resultsPanel.classList.remove("active");
 });
 
 resultsTab.addEventListener("click", () => {
   resultsTab.classList.add("active");
   entriesTab.classList.remove("active");
-  entriesPanel.style.display = "none";
-  resultsPanel.style.display = "block";
+  resultsPanel.classList.add("active");
+  entriesPanel.classList.remove("active");
   updateHistory();
 });
 
