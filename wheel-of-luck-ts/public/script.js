@@ -18,9 +18,6 @@ let spinAngleTotal = 0;
 let spinning = false;
 let history = [];
 
-const spinSound = new Audio("data:audio/mp3;base64,//uQxA..."); // Short click/tick sound
-spinSound.volume = 0.5;
-
 function resizeCanvas() {
   const container = document.getElementById("wheelContainer");
   const size = container.offsetWidth;
@@ -61,6 +58,7 @@ function drawWheel(size) {
     ctx.textAlign = "right";
     ctx.fillStyle = "#333";
     ctx.font = `${Math.floor(radius / 12)}px Quicksand`;
+
     let shortLabel = label;
     while (ctx.measureText(shortLabel).width > radius * 0.75) {
       shortLabel = shortLabel.slice(0, -1);
@@ -92,14 +90,19 @@ function drawWheel(size) {
   ctx.fillText("SPIN", radius, radius + radius * 0.03);
 }
 
+function easeOutCubic(t, b, c, d) {
+  t /= d;
+  t--;
+  return c * (t * t * t + 1) + b;
+}
+
 function spin() {
   if (spinning || segments.length === 0) return;
   spinning = true;
   namesInput.disabled = true;
   spinTime = 0;
-  spinTimeTotal = Math.random() * 3000 + 6000;
-  spinAngleTotal = Math.random() * 1000 + 1500;
-  spinSound.play();
+  spinTimeTotal = 3000 + Math.random() * 1500; // ~3 to 4.5 seconds
+  spinAngleTotal = 720 + Math.random() * 720; // 2 to 4 full spins
   rotateWheel();
 }
 
@@ -128,6 +131,7 @@ function stopRotateWheel() {
   updateHistory();
   namesInput.disabled = false;
   spinning = false;
+
   launchConfetti();
 }
 
@@ -160,6 +164,7 @@ function closePopup() {
 }
 
 canvas.addEventListener("click", spin);
+
 namesInput.addEventListener("input", () => {
   segments = namesInput.value.trim().split("\n").filter(Boolean);
   colors = generateColors(segments.length);
@@ -172,13 +177,14 @@ document.fonts.ready.then(resizeCanvas);
 
 // Confetti
 let confetti = [];
+
 function launchConfetti() {
-  for (let i = 0; i < 100; i++) {
+  for (let i = 0; i < 150; i++) {
     confetti.push({
       x: Math.random() * window.innerWidth,
-      y: Math.random() * -50,
+      y: Math.random() * -100,
       r: Math.random() * 6 + 4,
-      d: Math.random() * 20 + 10,
+      d: Math.random() * 50 + 10,
       color: `hsl(${Math.random() * 360}, 100%, 50%)`,
       tilt: Math.random() * 10 - 5,
       tiltAngle: 0,
@@ -189,11 +195,12 @@ function launchConfetti() {
 
 function animateConfetti() {
   confettiCtx.clearRect(0, 0, confettiCanvas.width, confettiCanvas.height);
-  confetti.forEach((c, i) => {
-    c.y += 2;
-    c.tiltAngle += 0.1;
+  confetti.forEach(c => {
+    c.y += 3;
+    c.tiltAngle += 0.05;
     c.x += Math.sin(c.tiltAngle);
     c.tilt = Math.sin(c.tiltAngle) * 10;
+
     confettiCtx.beginPath();
     confettiCtx.lineWidth = c.r;
     confettiCtx.strokeStyle = c.color;
@@ -201,6 +208,9 @@ function animateConfetti() {
     confettiCtx.lineTo(c.x, c.y + c.tilt + c.r);
     confettiCtx.stroke();
   });
+
   confetti = confetti.filter(c => c.y < window.innerHeight);
-  if (confetti.length > 0) requestAnimationFrame(animateConfetti);
+  if (confetti.length > 0) {
+    requestAnimationFrame(animateConfetti);
+  }
 }
