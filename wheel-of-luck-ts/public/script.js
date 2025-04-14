@@ -4,7 +4,11 @@ const namesInput = document.getElementById("namesInput");
 const popup = document.getElementById("popup");
 const popupResult = document.getElementById("popupResult");
 const historyBox = document.getElementById("history");
-const spinCountEl = document.getElementById("spinCount");
+const spinCountLabel = document.getElementById("spinCount");
+const entriesTab = document.getElementById("entriesTab");
+const resultsTab = document.getElementById("resultsTab");
+const entriesPanel = document.getElementById("entriesPanel");
+const resultsPanel = document.getElementById("resultsPanel");
 
 let segments = namesInput.value.trim().split("\n").filter(Boolean);
 let colors = generateColors(segments.length);
@@ -36,11 +40,7 @@ function resizeCanvas() {
 
 function generateColors(n) {
   const baseColors = ['#e57373', '#64b5f6', '#81c784', '#ffb74d', '#ba68c8', '#4dd0e1', '#ffd54f'];
-  const result = [];
-  for (let i = 0; i < n; i++) {
-    result.push(baseColors[i % baseColors.length]);
-  }
-  return result;
+  return Array.from({ length: n }, (_, i) => baseColors[i % baseColors.length]);
 }
 
 function drawWheel(visibleSize) {
@@ -63,19 +63,16 @@ function drawWheel(visibleSize) {
     ctx.textAlign = "right";
     ctx.fillStyle = "#333";
     ctx.font = `${Math.floor(radius / 12)}px Quicksand`;
-
     let shortLabel = label;
     let maxWidth = radius * 0.75;
     while (ctx.measureText(shortLabel).width > maxWidth && shortLabel.length > 0) {
       shortLabel = shortLabel.slice(0, -1);
     }
     if (shortLabel !== label) shortLabel = shortLabel.slice(0, -1) + "…";
-
     ctx.fillText(shortLabel, radius - 20, 10);
     ctx.restore();
   });
 
-  // Center button
   ctx.beginPath();
   ctx.arc(radius, radius, radius * 0.12, 0, Math.PI * 2);
   ctx.fillStyle = "#2196f3";
@@ -83,7 +80,6 @@ function drawWheel(visibleSize) {
   ctx.shadowBlur = 10;
   ctx.fill();
 
-  // Triangle pointer
   ctx.beginPath();
   ctx.moveTo(radius, radius * 0.12);
   ctx.lineTo(radius - 12, radius * 0.03);
@@ -131,9 +127,8 @@ function stopRotateWheel() {
   namesInput.disabled = false;
   history.unshift(result);
   spinCount++;
-  spinCountEl.textContent = spinCount;
-  historyBox.style.display = "block";
-  historyBox.innerText = history.slice(0, 10).join('\n');
+  spinCountLabel.textContent = `Spins: ${spinCount}`;
+  historyBox.textContent = history.slice(0, 10).join('\n');
 }
 
 function spin() {
@@ -157,3 +152,17 @@ namesInput.addEventListener("input", () => {
 
 window.addEventListener("resize", resizeCanvas);
 document.fonts.ready.then(resizeCanvas);
+
+entriesTab.addEventListener("click", () => {
+  entriesPanel.style.display = "block";
+  resultsPanel.style.display = "none";
+  entriesTab.classList.add("active");
+  resultsTab.classList.remove("active");
+});
+
+resultsTab.addEventListener("click", () => {
+  entriesPanel.style.display = "none";
+  resultsPanel.style.display = "block";
+  entriesTab.classList.remove("active");
+  resultsTab.classList.add("active");
+});
