@@ -1,14 +1,12 @@
 const canvas = document.getElementById("wheelCanvas");
 const ctx = canvas.getContext("2d");
+const confettiCanvas = document.getElementById("confettiCanvas");
+const confettiCtx = confettiCanvas.getContext("2d");
 const namesInput = document.getElementById("namesInput");
 const popup = document.getElementById("popup");
 const popupResult = document.getElementById("popupResult");
 const historyBox = document.getElementById("history");
 const spinCountLabel = document.getElementById("spinCount");
-const entriesTab = document.getElementById("entriesTab");
-const resultsTab = document.getElementById("resultsTab");
-const entriesPanel = document.getElementById("entries-panel");
-const resultsPanel = document.getElementById("results-panel");
 
 let segments = namesInput.value.trim().split("\n").filter(Boolean);
 let colors = generateColors(segments.length);
@@ -20,31 +18,33 @@ let spinAngleTotal = 0;
 let spinning = false;
 let history = [];
 
+const spinSound = new Audio("data:audio/wav;base64,UklGRiQAAABXQVZFZm10IBAAAAABAAEARKwAABCxAgAEABAAZGF0YQAAAAA="); // short click
+
 function resizeCanvas() {
   const container = document.getElementById("wheelContainer");
-  const containerSize = container.offsetWidth;
+  const size = container.offsetWidth;
   const dpr = window.devicePixelRatio || 1;
 
-  canvas.style.width = `${containerSize}px`;
-  canvas.style.height = `${containerSize}px`;
-  canvas.width = containerSize * dpr;
-  canvas.height = containerSize * dpr;
-
+  canvas.width = canvas.height = size * dpr;
+  canvas.style.width = canvas.style.height = `${size}px`;
   ctx.setTransform(1, 0, 0, 1, 0, 0);
   ctx.scale(dpr, dpr);
 
-  drawWheel(containerSize);
+  confettiCanvas.width = window.innerWidth;
+  confettiCanvas.height = window.innerHeight;
+
+  drawWheel(size);
 }
 
 function generateColors(n) {
-  const baseColors = ['#e57373', '#64b5f6', '#81c784', '#ffb74d', '#ba68c8', '#4dd0e1', '#ffd54f'];
-  return Array.from({ length: n }, (_, i) => baseColors[i % baseColors.length]);
+  const palette = ['#e57373', '#64b5f6', '#81c784', '#ffb74d', '#ba68c8', '#4dd0e1', '#ffd54f'];
+  return Array.from({ length: n }, (_, i) => palette[i % palette.length]);
 }
 
-function drawWheel(visibleSize) {
-  const radius = visibleSize / 2;
+function drawWheel(size) {
+  const radius = size / 2;
   arc = Math.PI * 2 / segments.length;
-  ctx.clearRect(0, 0, visibleSize, visibleSize);
+  ctx.clearRect(0, 0, size, size);
 
   segments.forEach((label, i) => {
     const angle = startAngle + i * arc;
@@ -60,13 +60,10 @@ function drawWheel(visibleSize) {
     ctx.textAlign = "right";
     ctx.fillStyle = "#333";
     ctx.font = `${Math.floor(radius / 12)}px Quicksand`;
-
     let shortLabel = label;
-    const maxWidth = radius * 0.75;
-    while (ctx.measureText(shortLabel).width > maxWidth && shortLabel.length > 0) {
+    while (ctx.measureText(shortLabel).width > radius * 0.75) {
       shortLabel = shortLabel.slice(0, -1);
     }
-    if (shortLabel !== label) shortLabel = shortLabel.slice(0, -1) + "…";
     ctx.fillText(shortLabel, radius - 20, 10);
     ctx.restore();
   });
@@ -74,8 +71,8 @@ function drawWheel(visibleSize) {
   ctx.beginPath();
   ctx.arc(radius, radius, radius * 0.12, 0, Math.PI * 2);
   ctx.fillStyle = "#2196f3";
-  ctx.shadowColor = "rgba(0, 0, 0, 0.2)";
   ctx.shadowBlur = 10;
+  ctx.shadowColor = "rgba(0, 0, 0, 0.2)";
   ctx.fill();
 
   ctx.beginPath();
@@ -84,59 +81,50 @@ function drawWheel(visibleSize) {
   ctx.lineTo(radius + 12, radius * 0.03);
   ctx.closePath();
   ctx.fillStyle = "#fff";
-  ctx.shadowColor = "rgba(0, 0, 0, 0.25)";
   ctx.shadowBlur = 5;
   ctx.fill();
 
   ctx.shadowBlur = 0;
-  ctx.fillStyle = "#fff";
   ctx.font = `bold ${Math.floor(radius * 0.08)}px Quicksand`;
+  ctx.fillStyle = "#fff";
   ctx.textAlign = "center";
   ctx.fillText("SPIN", radius, radius + radius * 0.03);
 }
 
-function easeOutCubic(t, b, c, d) {
-  t /= d;
-  t--;
-  return c * (t * t * t + 1) + b;
+function spin() {
+  if (spinning || segments.length === 0) return;
+  spinning = true;
+  namesInput.disabled = true;
+  spinTime = 0;
+  spinTimeTotal = Math.random() * 3000 + 6000;
+  spinAngleTotal = Math.random() * 1000 + 1500;
+  spinSound.play();
+  rotateWheel();
 }
 
 function rotateWheel() {
   spinTime += 30;
-  if (spinTime >= spinTimeTotal) {
-    stopRotateWheel();
-    return;
-  }
+  if (spinTime >= spinTimeTotal) return stopRotateWheel();
 
-  const spinAngle = easeOutCubic(spinTime, 0, spinAngleTotal, spinTimeTotal);
-  startAngle += (spinAngle * Math.PI / 180);
+  const angle = easeOutCubic(spinTime, 0, spinAngleTotal, spinTimeTotal);
+  startAngle += (angle * Math.PI / 180);
   drawWheel(canvas.clientWidth);
   requestAnimationFrame(rotateWheel);
 }
 
 function stopRotateWheel() {
   const degrees = startAngle * 180 / Math.PI + 90;
-  const arcd = arc * 180 / Math.PI;
-  const index = Math.floor((360 - degrees % 360) / arcd) % segments.length;
+  const index = Math.floor((360 - degrees % 360) / (arc * 180 / Math.PI)) % segments.length;
   const result = segments[index];
+
   popupResult.textContent = `You won: ${result}!`;
   popup.style.display = "flex";
-  spinning = false;
-  namesInput.disabled = false;
-
   history.unshift(result);
   spinCountLabel.textContent = `Spins: ${history.length}`;
   updateHistory();
-}
-
-function spin() {
-  if (spinning) return;
-  spinning = true;
-  namesInput.disabled = true;
-  spinTime = 0;
-  spinTimeTotal = Math.random() * 3000 + 6000;
-  spinAngleTotal = Math.random() * 1000 + 1500;
-  rotateWheel();
+  namesInput.disabled = false;
+  spinning = false;
+  launchConfetti();
 }
 
 function updateHistory() {
@@ -144,23 +132,30 @@ function updateHistory() {
 }
 
 function showTab(tab) {
+  const entriesTab = document.getElementById('entriesTab');
+  const resultsTab = document.getElementById('resultsTab');
+  const entriesPanel = document.getElementById('entries-panel');
+  const resultsPanel = document.getElementById('results-panel');
+
   if (tab === 'entries') {
-    document.getElementById('entriesTab').classList.add('active');
-    document.getElementById('resultsTab').classList.remove('active');
-    document.getElementById('entries-panel').classList.add('active');
-    document.getElementById('results-panel').classList.remove('active');
+    entriesTab.classList.add('active');
+    resultsTab.classList.remove('active');
+    entriesPanel.classList.add('active');
+    resultsPanel.classList.remove('active');
   } else {
-    document.getElementById('resultsTab').classList.add('active');
-    document.getElementById('entriesTab').classList.remove('active');
-    document.getElementById('results-panel').classList.add('active');
-    document.getElementById('entries-panel').classList.remove('active');
+    resultsTab.classList.add('active');
+    entriesTab.classList.remove('active');
+    resultsPanel.classList.add('active');
+    entriesPanel.classList.remove('active');
     updateHistory();
   }
 }
 
+function closePopup() {
+  popup.style.display = 'none';
+}
 
 canvas.addEventListener("click", spin);
-
 namesInput.addEventListener("input", () => {
   segments = namesInput.value.trim().split("\n").filter(Boolean);
   colors = generateColors(segments.length);
@@ -168,20 +163,40 @@ namesInput.addEventListener("input", () => {
   resizeCanvas();
 });
 
-entriesTab.addEventListener("click", () => {
-  entriesTab.classList.add("active");
-  resultsTab.classList.remove("active");
-  entriesPanel.classList.add("active");
-  resultsPanel.classList.remove("active");
-});
-
-resultsTab.addEventListener("click", () => {
-  resultsTab.classList.add("active");
-  entriesTab.classList.remove("active");
-  resultsPanel.classList.add("active");
-  entriesPanel.classList.remove("active");
-  updateHistory();
-});
-
 window.addEventListener("resize", resizeCanvas);
 document.fonts.ready.then(resizeCanvas);
+
+// Confetti
+let confetti = [];
+function launchConfetti() {
+  for (let i = 0; i < 100; i++) {
+    confetti.push({
+      x: Math.random() * window.innerWidth,
+      y: Math.random() * -50,
+      r: Math.random() * 6 + 4,
+      d: Math.random() * 20 + 10,
+      color: `hsl(${Math.random() * 360}, 100%, 50%)`,
+      tilt: Math.random() * 10 - 5,
+      tiltAngle: 0,
+    });
+  }
+  animateConfetti();
+}
+
+function animateConfetti() {
+  confettiCtx.clearRect(0, 0, confettiCanvas.width, confettiCanvas.height);
+  confetti.forEach((c, i) => {
+    c.y += 2;
+    c.tiltAngle += 0.1;
+    c.x += Math.sin(c.tiltAngle);
+    c.tilt = Math.sin(c.tiltAngle) * 10;
+    confettiCtx.beginPath();
+    confettiCtx.lineWidth = c.r;
+    confettiCtx.strokeStyle = c.color;
+    confettiCtx.moveTo(c.x + c.tilt, c.y);
+    confettiCtx.lineTo(c.x, c.y + c.tilt + c.r);
+    confettiCtx.stroke();
+  });
+  confetti = confetti.filter(c => c.y < window.innerHeight);
+  if (confetti.length > 0) requestAnimationFrame(animateConfetti);
+}
