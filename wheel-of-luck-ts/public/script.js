@@ -91,18 +91,18 @@ function drawWheel(size) {
 }
 
 // Default easing: easeOutCubic
-function easeOutCubic(t, b, c, d) {
-  t /= d;
-  t--;
-  return c * (t * t * t + 1) + b;
-}
-
-// Optional: easeOutQuart (uncomment to use instead)
-// function easeOutQuart(t, b, c, d) {
+// function easeOutCubic(t, b, c, d) {
 //   t /= d;
 //   t--;
-//   return -c * (t * t * t * t - 1) + b;
+//   return c * (t * t * t + 1) + b;
 // }
+
+// Optional: easeOutQuart (uncomment to use instead)
+function easeOutQuart(t, b, c, d) {
+  t /= d;
+  t--;
+  return -c * (t * t * t * t - 1) + b;
+}
 
 function spin() {
   if (spinning || segments.length === 0) return;
@@ -130,7 +130,7 @@ function rotateWheel(timestamp) {
     return;
   }
 
-  const easedAngle = easeOutCubic(elapsed, 0, spinAngleTotal, spinTimeTotal);
+  const easedAngle = easeOutQuart(elapsed, 0, spinAngleTotal, spinTimeTotal);
   const deltaAngle = easedAngle - lastSpinAngle;
   lastSpinAngle = easedAngle;
 
