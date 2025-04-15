@@ -35,7 +35,7 @@ function resizeCanvas() {
 }
 
 function generateColors(n) {
-  const palette = ['#e57373', '#64b5f6', '#81c784', '#ffb74d', '#ba68c8', '#4dd0e1', '#ffd54f'];
+  const palette = ['#f44336', '#4caf50', '#ff9800', '#2196f3', '#9c27b0', '#ffeb3b', '#00bcd4'];
   return Array.from({ length: n }, (_, i) => palette[i % palette.length]);
 }
 
