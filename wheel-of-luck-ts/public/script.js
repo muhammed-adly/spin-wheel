@@ -63,8 +63,13 @@ function drawWheel(size) {
     ctx.font = `${Math.floor(radius / 12)}px Quicksand`;
 
     let shortLabel = label;
-    while (ctx.measureText(shortLabel).width > radius * 0.75) {
+    const maxWidth = radius * 0.75;
+    
+    while (ctx.measureText(shortLabel).width > maxWidth && shortLabel.length > 0) {
       shortLabel = shortLabel.slice(0, -1);
+    }
+    if (shortLabel !== label) {
+      shortLabel = shortLabel.slice(0, -1) + '…';
     }
     ctx.fillText(shortLabel, radius - 20, 10);
     ctx.restore();
