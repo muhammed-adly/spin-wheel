@@ -90,7 +90,7 @@ function drawPointer(ctx, radius) {
 
   // Move pointer slightly downward to overlap the wheel rim
   ctx.save();
-  ctx.translate(radius, radius - (radius - 20)); // ← tweak this to move up/down
+  ctx.translate(radius, radius - (radius - 35)); // deeper overlap
 
   // Outer gold triangle (border)
   ctx.beginPath();
@@ -111,7 +111,8 @@ function drawPointer(ctx, radius) {
 
   // Red glow if spinning
   ctx.shadowColor = "rgba(255, 0, 0, 0.6)";
-  ctx.shadowBlur = spinning ? 12 : 0;
+  ctx.shadowBlur = spinning ? 25 : 0;
+  ctx.shadowColor = "rgba(255, 100, 100, 0.9)";
   ctx.fill();
 
   ctx.restore();
