@@ -8,6 +8,9 @@ const popupResult = document.getElementById("popupResult");
 const historyBox = document.getElementById("history");
 const spinCountLabel = document.getElementById("spinCount");
 
+const tickSound = new Audio("data:audio/mp3;base64,//uQxAA..."); // Replace with your actual tick audio
+tickSound.volume = 0.6;
+
 let segments = namesInput.value.trim().split("\n").filter(Boolean);
 let colors = generateColors(segments.length);
 let startAngle = 0;
@@ -138,11 +141,14 @@ function spin() {
   spinAngleTotal = 1440 + Math.random() * 720; // 4 to 6 full spins
 
   lastSpinAngle = 0;
+  lastSegmentIndex = -1; // for tick sound
   startTimestamp = null;
+
   requestAnimationFrame(rotateWheel);
 }
 
 let lastSpinAngle = 0;
+let lastSegmentIndex = -1;
 let startTimestamp = null;
 
 function rotateWheel(timestamp) {
@@ -161,6 +167,20 @@ function rotateWheel(timestamp) {
 
   startAngle += (deltaAngle * Math.PI / 180);
   drawWheel(canvas.clientWidth);
+
+  // 🔊 Play tick when a new segment is crossed
+  const degrees = startAngle * 180 / Math.PI + 90;
+  const currentIndex = Math.floor((360 - degrees % 360) / (arc * 180 / Math.PI)) % segments.length;
+
+  if (currentIndex !== lastSegmentIndex) {
+    try {
+      tickSound.currentTime = 0;
+      tickSound.play();
+    } catch (e) {
+      // Ignore autoplay errors
+    }
+    lastSegmentIndex = currentIndex;
+  }
 
   requestAnimationFrame(rotateWheel);
 }
