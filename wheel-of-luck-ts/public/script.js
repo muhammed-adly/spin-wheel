@@ -74,20 +74,44 @@ function drawWheel(size) {
   ctx.shadowColor = "rgba(0, 0, 0, 0.2)";
   ctx.fill();
 
-  ctx.beginPath();
-  ctx.moveTo(radius, radius * 0.12);
-  ctx.lineTo(radius - 12, radius * 0.03);
-  ctx.lineTo(radius + 12, radius * 0.03);
-  ctx.closePath();
-  ctx.fillStyle = "#fff";
-  ctx.shadowBlur = 5;
-  ctx.fill();
-
   ctx.shadowBlur = 0;
   ctx.font = `bold ${Math.floor(radius * 0.1)}px Quicksand`;
   ctx.fillStyle = "#fff";
   ctx.textAlign = "center";
   ctx.fillText("SPIN", radius, radius + radius * 0.03);
+
+  // draw the pointer
+  drawPointer(ctx, radius);
+}
+
+function drawPointer(ctx, radius) {
+  const pointerHeight = radius * 0.15;
+  const pointerWidth = radius * 0.12;
+
+  ctx.save();
+  ctx.translate(radius, radius - (radius - 10)); // move to top edge
+
+  // Outer gold border
+  ctx.beginPath();
+  ctx.moveTo(0, 0);
+  ctx.lineTo(-pointerWidth, -pointerHeight);
+  ctx.lineTo(pointerWidth, -pointerHeight);
+  ctx.closePath();
+  ctx.fillStyle = "#ffcc33";
+  ctx.fill();
+
+  // Inner red triangle
+  ctx.beginPath();
+  ctx.moveTo(0, -radius * 0.01);
+  ctx.lineTo(-pointerWidth * 0.8, -pointerHeight * 0.9);
+  ctx.lineTo(pointerWidth * 0.8, -pointerHeight * 0.9);
+  ctx.closePath();
+  ctx.fillStyle = "#b71c1c";
+  ctx.shadowColor = "rgba(0, 0, 0, 0.4)";
+  ctx.shadowBlur = 4;
+  ctx.fill();
+
+  ctx.restore();
 }
 
 // Default easing: easeOutCubic
