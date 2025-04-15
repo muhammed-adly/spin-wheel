@@ -85,14 +85,14 @@ function drawWheel(size) {
 }
 
 function drawPointer(ctx, radius) {
-  const pointerHeight = radius * 0.15;
-  const pointerWidth = radius * 0.12;
+  const pointerHeight = radius * 0.18; // taller
+  const pointerWidth = radius * 0.06;  // narrower for isosceles look
 
-  // Move pointer slightly downward to overlap the wheel rim
+  // Position pointer at the top, overlapping the rim slightly
   ctx.save();
-  ctx.translate(radius, radius - (radius - 35)); // deeper overlap
+  ctx.translate(radius, radius - (radius - 28));
 
-  // Outer gold triangle (border)
+  // Outer gold border
   ctx.beginPath();
   ctx.moveTo(0, 0);
   ctx.lineTo(-pointerWidth, -pointerHeight);
@@ -104,15 +104,12 @@ function drawPointer(ctx, radius) {
   // Inner red triangle
   ctx.beginPath();
   ctx.moveTo(0, -radius * 0.01);
-  ctx.lineTo(-pointerWidth * 0.8, -pointerHeight * 0.9);
-  ctx.lineTo(pointerWidth * 0.8, -pointerHeight * 0.9);
+  ctx.lineTo(-pointerWidth * 0.9, -pointerHeight * 0.92);
+  ctx.lineTo(pointerWidth * 0.9, -pointerHeight * 0.92);
   ctx.closePath();
   ctx.fillStyle = "#b71c1c";
-
-  // Red glow if spinning
   ctx.shadowColor = "rgba(255, 0, 0, 0.6)";
-  ctx.shadowBlur = spinning ? 25 : 0;
-  ctx.shadowColor = "rgba(255, 100, 100, 0.9)";
+  ctx.shadowBlur = spinning ? 20 : 0;
   ctx.fill();
 
   ctx.restore();
