@@ -68,7 +68,7 @@ function drawWheel(size) {
   });
 
   ctx.beginPath();
-  ctx.arc(radius, radius, radius * 0.12, 0, Math.PI * 2);
+  ctx.arc(radius, radius, radius * 0.16, 0, Math.PI * 2); // Bigger button
   ctx.fillStyle = "#2196f3";
   ctx.shadowBlur = 10;
   ctx.shadowColor = "rgba(0, 0, 0, 0.2)";
@@ -84,7 +84,7 @@ function drawWheel(size) {
   ctx.fill();
 
   ctx.shadowBlur = 0;
-  ctx.font = `bold ${Math.floor(radius * 0.08)}px Quicksand`;
+  ctx.font = `bold ${Math.floor(radius * 0.1)}px Quicksand`;
   ctx.fillStyle = "#fff";
   ctx.textAlign = "center";
   ctx.fillText("SPIN", radius, radius + radius * 0.03);
