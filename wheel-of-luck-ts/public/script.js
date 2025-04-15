@@ -60,7 +60,7 @@ function drawWheel(size) {
     ctx.rotate(angle + arc / 2);
     ctx.textAlign = "right";
     ctx.fillStyle = "#333";
-    ctx.font = `${Math.floor(radius / 12)}px`;
+    ctx.font = `${Math.floor(radius / 12)}px Quicksand`;
 
     let shortLabel = label;
     while (ctx.measureText(shortLabel).width > radius * 0.75) {
