@@ -185,7 +185,7 @@ function stopRotateWheel() {
 }
 
 function updateHistory() {
-  historyBox.innerText = history.slice(0, 10).join('\n');
+  document.getElementById("historyBox").value = history.slice(0, 10).join('\n');
 }
 
 function showTab(tab) {
