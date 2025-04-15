@@ -110,8 +110,10 @@ function spin() {
   namesInput.disabled = true;
   spinTime = 0;
   lastSpinAngle = 0;
-  spinTimeTotal = 2500; // 2.5 seconds
-  spinAngleTotal = 1800; // 5 full spins
+
+  spinTimeTotal = 4000; // 4 seconds
+  spinAngleTotal = 1440 + Math.random() * 720; // 4 to 6 full spins
+
   rotateWheel();
 }
 
