@@ -108,26 +108,29 @@ function spin() {
   if (spinning || segments.length === 0) return;
   spinning = true;
   namesInput.disabled = true;
-  spinTime = 0;
-  lastSpinAngle = 0;
 
   spinTimeTotal = 4000; // 4 seconds
   spinAngleTotal = 1440 + Math.random() * 720; // 4 to 6 full spins
 
-  rotateWheel();
+  lastSpinAngle = 0;
+  startTimestamp = null;
+  requestAnimationFrame(rotateWheel);
 }
 
 let lastSpinAngle = 0;
+let startTimestamp = null;
 
-function rotateWheel() {
-  spinTime += 30;
+function rotateWheel(timestamp) {
+  if (!startTimestamp) startTimestamp = timestamp;
 
-  if (spinTime >= spinTimeTotal) {
+  const elapsed = timestamp - startTimestamp;
+
+  if (elapsed >= spinTimeTotal) {
     stopRotateWheel();
     return;
   }
 
-  const easedAngle = easeOutCubic(spinTime, 0, spinAngleTotal, spinTimeTotal);
+  const easedAngle = easeOutCubic(elapsed, 0, spinAngleTotal, spinTimeTotal);
   const deltaAngle = easedAngle - lastSpinAngle;
   lastSpinAngle = easedAngle;
 
@@ -136,7 +139,6 @@ function rotateWheel() {
 
   requestAnimationFrame(rotateWheel);
 }
-
 
 function stopRotateWheel() {
   const degrees = startAngle * 180 / Math.PI + 90;
