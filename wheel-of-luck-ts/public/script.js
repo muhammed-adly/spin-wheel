@@ -90,19 +90,27 @@ function drawWheel(size) {
   ctx.fillText("SPIN", radius, radius + radius * 0.03);
 }
 
+// Default easing: easeOutCubic
 function easeOutCubic(t, b, c, d) {
   t /= d;
   t--;
   return c * (t * t * t + 1) + b;
 }
 
+// Optional: easeOutQuart (uncomment to use instead)
+// function easeOutQuart(t, b, c, d) {
+//   t /= d;
+//   t--;
+//   return -c * (t * t * t * t - 1) + b;
+// }
+
 function spin() {
   if (spinning || segments.length === 0) return;
   spinning = true;
   namesInput.disabled = true;
   spinTime = 0;
-  spinTimeTotal = 3000 + Math.random() * 1500; // ~3 to 4.5 seconds
-  spinAngleTotal = 720 + Math.random() * 720; // 2 to 4 full spins
+  spinTimeTotal = 2500; // 2.5 seconds
+  spinAngleTotal = 1800; // 5 full spins
   rotateWheel();
 }
 
@@ -114,6 +122,7 @@ function rotateWheel() {
   }
 
   const spinAngle = easeOutCubic(spinTime, 0, spinAngleTotal, spinTimeTotal);
+  // const spinAngle = easeOutQuart(spinTime, 0, spinAngleTotal, spinTimeTotal); // optional
   startAngle += (spinAngle * Math.PI / 180);
   drawWheel(canvas.clientWidth);
   requestAnimationFrame(rotateWheel);
