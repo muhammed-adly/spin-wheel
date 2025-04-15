@@ -40,7 +40,7 @@
         <div id="spinCount">Spins: 0</div>
         <div class="tabs">
           <div class="tab-label active" id="entriesTab" onclick="showTab('entries')">Entries</div>
-          <div class="tab-label" id="resultsTab" onclick="showTab('results')">History</div>
+          <div class="tab-label" id="resultsTab" onclick="showTab('results')">Results</div>
         </div>
 
         <div id="entries-panel" class="tab-panel active">
@@ -58,9 +58,8 @@ Rabbit 🐇
 
         <div id="results-panel" class="tab-panel">
           <h3>Previous Spins:</h3>
-          <div id="results-panel" class="tab-panel">
-            <h3>Previous Spins:</h3>
-            <textarea id="historyBox" disabled></textarea>
+          <div id="historyWrapper">
+            <div id="history"></div>
           </div>
         </div>
       </div>
