@@ -170,7 +170,7 @@ function stopRotateWheel() {
   const index = Math.floor((360 - degrees % 360) / (arc * 180 / Math.PI)) % segments.length;
   const result = segments[index];
 
-  popupResult.textContent = `You won: ${result}!`;
+  popupResult.textContent = `${result}!`;
   popup.style.display = "flex";
   history.unshift(result);
   spinCountLabel.textContent = `Spins: ${history.length}`;
