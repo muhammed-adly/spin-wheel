@@ -196,7 +196,7 @@ function launchConfetti() {
 function animateConfetti() {
   confettiCtx.clearRect(0, 0, confettiCanvas.width, confettiCanvas.height);
   confetti.forEach(c => {
-    c.y += 5;
+    c.y += 6;
     c.tiltAngle += 0.05;
     c.x += Math.sin(c.tiltAngle);
     c.tilt = Math.sin(c.tiltAngle) * 10;
