@@ -89,7 +89,7 @@ canvas#confettiCanvas {
 }
 
 .tab-label.active {
-  background: #2196f3;
+  background: #1976d2; /* Darker blue for better contrast */
   color: #fff;
   border-bottom: 4px solid #fff;
 }
