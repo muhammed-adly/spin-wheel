@@ -7,7 +7,7 @@
 body {
   font-family: 'Quicksand', sans-serif;
   background: linear-gradient(135deg, #e6f3ff, #ffffff);
-  color: #777; /* same as footer */
+  color: #333; /* same as footer */
   text-align: center;
   padding: 20px 5vw;
 }
@@ -237,5 +237,5 @@ textarea:disabled,
 footer {
   margin-top: 40px;
   font-size: 0.9em;
-  color: #777;
+  color: #333;
 }
