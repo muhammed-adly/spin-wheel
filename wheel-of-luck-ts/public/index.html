@@ -43,36 +43,63 @@
       margin-bottom: 20px;
       font-family: 'Quicksand', sans-serif;
     }
-
     #intro {
       max-width: 640px;
       margin: 0 auto 40px;
       color: #444;
     }
-
     #intro h2 {
       font-size: 1.6em;
       margin-bottom: 8px;
       font-weight: 700;
     }
-
     #intro p {
       font-size: 1em;
       line-height: 1.6;
     }
-
     .microcopy {
       margin-top: 8px;
       font-size: 14px;
       color: #555;
       text-align: left;
     }
-
     #results-panel h3 {
       color: #2196f3;
       text-align: left;
       font-weight: bold;
       margin-bottom: 10px;
+    }
+    .faq-section {
+      max-width: 960px;
+      margin: 60px auto;
+      padding: 0 16px;
+    }
+    .faq-item {
+      background: #f9f9f9;
+      border: 2px solid #e0e0e0;
+      border-radius: 12px;
+      margin-bottom: 12px;
+      overflow: hidden;
+    }
+    .faq-header {
+      background: #2196f3;
+      color: #fff;
+      font-weight: bold;
+      padding: 16px;
+      cursor: pointer;
+      font-size: 1.2em;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+    }
+    .faq-content {
+      padding: 16px;
+      background: #fff;
+      display: none;
+      color: #444;
+    }
+    .faq-item.active .faq-content {
+      display: block;
     }
   </style>
 </head>
@@ -92,14 +119,12 @@
   <section id="game">
     <div id="gameContainer">
       <div id="wheelContainer"><canvas id="wheelCanvas"></canvas></div>
-
       <div id="textInputContainer">
         <div id="spinCount">Spins: 0</div>
         <div class="tabs">
           <div class="tab-label active" id="entriesTab" onclick="showTab('entries')">Entries</div>
           <div class="tab-label" id="resultsTab" onclick="showTab('results')">History</div>
         </div>
-
         <div id="entries-panel" class="tab-panel active">
           <textarea id="namesInput" placeholder="Type each item on a new line. Add emojis for fun! 🎉">Cat 🐈
 Dog 🐶
@@ -110,12 +135,67 @@ Tiger 🐅
 Rabbit 🐇</textarea>
           <p class="microcopy">💡 Tip: Each line is one item — add emojis for fun! 🎉</p>
         </div>
-
         <div id="results-panel" class="tab-panel">
           <div id="historyWrapper">
             <div id="history"></div>
           </div>
         </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- FAQ Section -->
+  <section class="faq-section">
+    <div class="faq-item">
+      <div class="faq-header" onclick="this.parentElement.classList.toggle('active')">
+        🎯 What is the Wheel of Luck for?
+        <span>▼</span>
+      </div>
+      <div class="faq-content">
+        <ul>
+          <li>Spin to choose a winner in a giveaway or raffle.</li>
+          <li>Randomize chores or daily tasks with your family.</li>
+          <li>Use it in the classroom to select a student fairly.</li>
+          <li>Make meetings more fun by picking who speaks first.</li>
+          <li>Can’t decide what to eat? Let the wheel pick for you.</li>
+        </ul>
+      </div>
+    </div>
+    <div class="faq-item">
+      <div class="faq-header" onclick="this.parentElement.classList.toggle('active')">
+        🛠️ How do I use the spinner?
+        <span>▼</span>
+      </div>
+      <div class="faq-content">
+        Just type your options in the box next to the wheel — one item per line — then click the wheel to spin.
+        It randomly selects one winner from your list. Add emojis to make it playful!
+      </div>
+    </div>
+    <div class="faq-item">
+      <div class="faq-header" onclick="this.parentElement.classList.toggle('active')">
+        🔐 Is my data safe?
+        <span>▼</span>
+      </div>
+      <div class="faq-content">
+        Everything runs locally in your browser — no data is stored or sent anywhere. Your input stays on your device.
+      </div>
+    </div>
+    <div class="faq-item">
+      <div class="faq-header" onclick="this.parentElement.classList.toggle('active')">
+        🎲 Is the spin random?
+        <span>▼</span>
+      </div>
+      <div class="faq-content">
+        Yes! The spin uses easing and randomized logic, just like a real wheel. Every spin is unique.
+      </div>
+    </div>
+    <div class="faq-item">
+      <div class="faq-header" onclick="this.parentElement.classList.toggle('active')">
+        🌱 Is Wheel of Luck eco-friendly?
+        <span>▼</span>
+      </div>
+      <div class="faq-content">
+        Yes, we are hosted on infrastructure powered by renewable energy sources — fast, simple, and sustainable.
       </div>
     </div>
   </section>
@@ -133,16 +213,6 @@ Rabbit 🐇</textarea>
   <footer>&copy; 2025 Wheel of Luck. All rights reserved.</footer>
 
   <script src="script.min.js"></script>
-
-  <script type="application/ld+json">
-  {
-    "@context": "https://schema.org",
-    "@type": "WebSite",
-    "name": "Wheel of Luck",
-    "url": "https://www.spinthewheeel.com"
-  }
-  </script>
-
   <script async src="https://www.googletagmanager.com/gtag/js?id=G-6DM157ZXMR"></script>
   <script>
     window.dataLayer = window.dataLayer || [];
@@ -151,6 +221,7 @@ Rabbit 🐇</textarea>
     gtag('config', 'G-6DM157ZXMR');
   </script>
 
+  <!-- SEO: Structured Data -->
   <script type="application/ld+json">
   {
     "@context": "https://schema.org",
@@ -158,32 +229,46 @@ Rabbit 🐇</textarea>
     "mainEntity": [
       {
         "@type": "Question",
-        "name": "How do I use the Wheel of Luck?",
+        "name": "What is the Wheel of Luck for?",
         "acceptedAnswer": {
           "@type": "Answer",
-          "text": "Type your entries in the box, then click on the wheel to spin. The wheel will stop randomly on a winner."
+          "text": "Use it for giveaways, random chores, team decisions, or classroom fun. Just spin and let fate decide."
         }
       },
       {
         "@type": "Question",
-        "name": "Is this spinner truly random?",
+        "name": "How do I use the spinner?",
         "acceptedAnswer": {
           "@type": "Answer",
-          "text": "Yes, the result is determined by randomized spin logic, making each outcome unpredictable."
+          "text": "Enter your choices in the box, click the wheel to spin, and one is selected at random."
         }
       },
       {
         "@type": "Question",
-        "name": "What can I use it for?",
+        "name": "Is my data safe?",
         "acceptedAnswer": {
           "@type": "Answer",
-          "text": "Use it for giveaways, name picking, classroom decisions, party games, or any kind of random selection."
+          "text": "Yes, all input stays in your browser. Nothing is stored or sent anywhere."
+        }
+      },
+      {
+        "@type": "Question",
+        "name": "Is the spin random?",
+        "acceptedAnswer": {
+          "@type": "Answer",
+          "text": "Yes. Every spin uses easing and randomized math to simulate a physical wheel."
+        }
+      },
+      {
+        "@type": "Question",
+        "name": "Is Wheel of Luck eco-friendly?",
+        "acceptedAnswer": {
+          "@type": "Answer",
+          "text": "We’re hosted on servers powered by renewable energy."
         }
       }
     ]
   }
   </script>
-
 </body>
-
 </html>
