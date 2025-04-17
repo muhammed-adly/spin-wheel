@@ -2,7 +2,7 @@
 <html lang="en">
 
 <head>
-  <title>Wheel of Luck | Spin the Wheel to Pick Random Names or Prizes</title>
+  <title>Wheel of Luck - Spin the Wheel for Raffles, Games & Decisions</title>
   <link rel="icon" href="/favicon.ico" type="image/x-icon" />
   <link rel="stylesheet" href="style.min.css" />
   <link rel="preconnect" href="https://fonts.googleapis.com" />
@@ -11,13 +11,13 @@
   <noscript>
     <link href="https://fonts.googleapis.com/css2?family=Quicksand:wght@400;700&display=swap" rel="stylesheet" />
   </noscript>
-  
+
   <link rel="canonical" href="https://www.spinthewheeel.com/" />
   <link rel="sitemap" type="application/xml" title="Sitemap" href="sitemap.xml" />
 
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <meta name="description" content="Use Wheel of Luck to randomly pick names, prizes, or choices with a fun animated spinner. Great for giveaways, raffles, classrooms, and games!" />
+  <meta name="description" content="Wheel of Luck is a fun and interactive spin-the-wheel game. Enter your choices, spin the wheel, and let fate decide. Great for raffles, games, and more!" />
   <meta name="keywords" content="spin the wheel, random name picker, prize spinner, raffle spinner, lucky wheel, classroom wheel, wheel of fortune" />
   <meta name="author" content="Randomly Ltd." />
 
@@ -36,6 +36,9 @@
 
   <!-- speed up the title rendering -->
   <style>
+    html {
+      font-family: 'Quicksand', sans-serif;
+    }
     h1 {
       font-size: 2.8em;
       color: #1976d2;
@@ -51,6 +54,14 @@
   <header>
     <h1>Wheel of Luck</h1>
   </header>
+
+  <section id="intro" style="max-width: 600px; margin: 0 auto; color: #444;">
+    <h2>Welcome to the Wheel of Luck!</h2>
+    <p>
+      This free tool lets you enter names, items, or options and spin the wheel to get a random result.
+      Use it for giveaways, decisions, classroom activities, or just for fun!
+    </p>
+  </section>
 
   <section id="game">
     <div id="gameContainer">
@@ -72,8 +83,7 @@ Turtle 🐢
 Lion 🦁
 Elephant 🐘
 Tiger🐅
-Rabbit 🐇
-          </textarea>
+Rabbit 🐇</textarea>
         </div>
 
         <div id="results-panel" class="tab-panel">
@@ -103,22 +113,22 @@ Rabbit 🐇
   <script type="application/ld+json">
   {
     "@context": "https://schema.org",
-    "@type": "WebSite",
+    "@type": "WebApplication",
     "name": "Wheel of Luck",
-    "url": "https://www.spinthewheeel.com"
+    "url": "https://www.spinthewheeel.com",
+    "applicationCategory": "GameApplication",
+    "operatingSystem": "All",
+    "browserRequirements": "Requires JavaScript",
+    "description": "Interactive random wheel spinner for names, decisions, and games.",
+    "inLanguage": "en",
+    "creator": {
+      "@type": "Organization",
+      "name": "Randomly Ltd."
+    }
   }
   </script>
 
-  <script async src="https://www.googletagmanager.com/gtag/js?id=G-6DM157ZXMR"></script>
-  <script>
-    window.dataLayer = window.dataLayer || [];
-    function gtag() { dataLayer.push(arguments); }
-    gtag('js', new Date());
-    gtag('config', 'G-6DM157ZXMR');
-  </script>
-
-
-<script type="application/ld+json">
+  <script type="application/ld+json">
   {
     "@context": "https://schema.org",
     "@type": "FAQPage",
@@ -150,7 +160,14 @@ Rabbit 🐇
     ]
   }
   </script>
-  
+
+  <script async src="https://www.googletagmanager.com/gtag/js?id=G-6DM157ZXMR"></script>
+  <script>
+    window.dataLayer = window.dataLayer || [];
+    function gtag() { dataLayer.push(arguments); }
+    gtag('js', new Date());
+    gtag('config', 'G-6DM157ZXMR');
+  </script>
 </body>
 
 </html>
