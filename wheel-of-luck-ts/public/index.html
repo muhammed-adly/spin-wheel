@@ -34,11 +34,8 @@
   <meta name="twitter:card" content="summary_large_image" />
   <meta name="twitter:image" content="https://www.spinthewheeel.com/preview.png" />
 
-  <!-- speed up the title rendering -->
+  <!-- Speed-optimized title render -->
   <style>
-    html {
-      font-family: 'Quicksand', sans-serif;
-    }
     h1 {
       font-size: 2.8em;
       color: #1976d2;
@@ -46,6 +43,26 @@
       text-shadow: 2px 2px 3px rgba(0, 0, 0, 0.1);
       margin-bottom: 40px;
       font-family: 'Quicksand', sans-serif;
+    }
+
+    #intro {
+      max-width: 700px;
+      margin: 0 auto 40px;
+      padding: 0 20px;
+      text-align: center;
+    }
+
+    #intro h2 {
+      font-size: 1.8em;
+      margin-bottom: 10px;
+      font-weight: bold;
+      color: #333;
+    }
+
+    #intro p {
+      font-size: 1.1em;
+      line-height: 1.6;
+      color: #444;
     }
   </style>
 </head>
@@ -55,11 +72,11 @@
     <h1>Wheel of Luck</h1>
   </header>
 
-  <section id="intro" style="max-width: 600px; margin: 0 auto; color: #444;">
+  <section id="intro">
     <h2>Welcome to the Wheel of Luck!</h2>
     <p>
       This free tool lets you enter names, items, or options and spin the wheel to get a random result.
-      Use it for giveaways, decisions, classroom activities, or just for fun!
+      Use it for <strong>giveaways</strong>, <strong>decisions</strong>, <strong>classroom activities</strong>, or just for fun!
     </p>
   </section>
 
@@ -82,12 +99,13 @@ Dog 🐶
 Turtle 🐢
 Lion 🦁
 Elephant 🐘
-Tiger🐅
-Rabbit 🐇</textarea>
+Tiger 🐅
+Rabbit 🐇
+          </textarea>
         </div>
 
         <div id="results-panel" class="tab-panel">
-          <label for="historyWrapper">Previous Spins: </label>
+          <label for="historyWrapper">Previous Spins:</label>
           <div id="historyWrapper">
             <div id="history"></div>
           </div>
@@ -111,54 +129,12 @@ Rabbit 🐇</textarea>
   <script src="script.min.js"></script>
 
   <script type="application/ld+json">
-  {
-    "@context": "https://schema.org",
-    "@type": "WebApplication",
-    "name": "Wheel of Luck",
-    "url": "https://www.spinthewheeel.com",
-    "applicationCategory": "GameApplication",
-    "operatingSystem": "All",
-    "browserRequirements": "Requires JavaScript",
-    "description": "Interactive random wheel spinner for names, decisions, and games.",
-    "inLanguage": "en",
-    "creator": {
-      "@type": "Organization",
-      "name": "Randomly Ltd."
+    {
+      "@context": "https://schema.org",
+      "@type": "WebSite",
+      "name": "Wheel of Luck",
+      "url": "https://www.spinthewheeel.com"
     }
-  }
-  </script>
-
-  <script type="application/ld+json">
-  {
-    "@context": "https://schema.org",
-    "@type": "FAQPage",
-    "mainEntity": [
-      {
-        "@type": "Question",
-        "name": "How do I use the Wheel of Luck?",
-        "acceptedAnswer": {
-          "@type": "Answer",
-          "text": "Type your entries in the box, then click on the wheel to spin. The wheel will stop randomly on a winner."
-        }
-      },
-      {
-        "@type": "Question",
-        "name": "Is this spinner truly random?",
-        "acceptedAnswer": {
-          "@type": "Answer",
-          "text": "Yes, the result is determined by randomized spin logic, making each outcome unpredictable."
-        }
-      },
-      {
-        "@type": "Question",
-        "name": "What can I use it for?",
-        "acceptedAnswer": {
-          "@type": "Answer",
-          "text": "Use it for giveaways, name picking, classroom decisions, party games, or any kind of random selection."
-        }
-      }
-    ]
-  }
   </script>
 
   <script async src="https://www.googletagmanager.com/gtag/js?id=G-6DM157ZXMR"></script>
@@ -167,6 +143,39 @@ Rabbit 🐇</textarea>
     function gtag() { dataLayer.push(arguments); }
     gtag('js', new Date());
     gtag('config', 'G-6DM157ZXMR');
+  </script>
+
+  <script type="application/ld+json">
+    {
+      "@context": "https://schema.org",
+      "@type": "FAQPage",
+      "mainEntity": [
+        {
+          "@type": "Question",
+          "name": "How do I use the Wheel of Luck?",
+          "acceptedAnswer": {
+            "@type": "Answer",
+            "text": "Type your entries in the box, then click on the wheel to spin. The wheel will stop randomly on a winner."
+          }
+        },
+        {
+          "@type": "Question",
+          "name": "Is this spinner truly random?",
+          "acceptedAnswer": {
+            "@type": "Answer",
+            "text": "Yes, the result is determined by randomized spin logic, making each outcome unpredictable."
+          }
+        },
+        {
+          "@type": "Question",
+          "name": "What can I use it for?",
+          "acceptedAnswer": {
+            "@type": "Answer",
+            "text": "Use it for giveaways, name picking, classroom decisions, party games, or any kind of random selection."
+          }
+        }
+      ]
+    }
   </script>
 </body>
 
